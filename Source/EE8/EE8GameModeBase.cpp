@@ -6,7 +6,7 @@
 
 void AEE8GameModeBase::BeginPlay()
 {
-	InitializeSpace(100, 50);
+	InitializeSpace(GenerationSeed, NumStars);
 }
 
 void AEE8GameModeBase::InitializeSpace(int32 Seed, int32 CountOfStars)

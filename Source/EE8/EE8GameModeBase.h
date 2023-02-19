@@ -21,6 +21,12 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ASpaceManager> SpaceManagerClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	int32 GenerationSeed = 100;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 NumStars = 50;
+
 protected:
 	ASpaceManager* SpaceManager;
 
