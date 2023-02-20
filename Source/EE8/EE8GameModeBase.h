@@ -26,6 +26,6 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	void InitializeSpace(int32 Seed, int32 CountOfStars);
+	void InitializeSpace(int32 Seed, int32 NumberOfStars);
 
 };

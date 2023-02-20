@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/LineBatchComponent.h"
 #include "SpaceEntities/SpaceObject.h"
+#include "Engine/Engine.h"
 #include "Star.generated.h"
 
 /**
@@ -14,15 +16,19 @@ class EE8_API AStar : public ASpaceObject
 {
 	GENERATED_BODY()
 
+	ULineBatchComponent* LBComponent;
+	FRandomStream RStream;
 
 protected:
 
 	UPROPERTY()
-	int32 CountOfPlanets;
+
+	TArray<FVector> Neighbours;
 
 public:
-	
-	void Initialize(int32 PlanetCount);
+	AStar();
 
-	int32 GetCountOfPlanets();
+	void Initialize(int32 PlanetCount, TArray<FVector> NearestNeighbours);
+
+	void DrawL();
 };

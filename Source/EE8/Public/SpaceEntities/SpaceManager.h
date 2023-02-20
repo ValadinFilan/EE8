@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Engine/Engine.h"
 #include "SpaceManager.generated.h"
 
 class AStar;
@@ -22,7 +23,7 @@ public:
 	int32 Seed;
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 CountOfStars;
+	int32 NumberOfStars;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 MinPlanets = 1;
@@ -31,10 +32,24 @@ public:
 	int32 MaxPlanets = 10;
 
 	UPROPERTY(EditDefaultsOnly)
+	float WeldDistance = 10000;
+
+	UPROPERTY(EditDefaultsOnly)
 	float GalaxyRadius = 50000;
 
 	UPROPERTY(EditDefaultsOnly)
 	float SystemRadius = 3000;
+};
+
+struct SystemData{
+public:
+	SystemData(FTransform T, TArray<FVector>* NN)
+	{
+		Transform = T;
+		NearestNeighbours = NN;
+	}
+	FTransform Transform;
+	TArray<FVector>* NearestNeighbours;
 };
 
 UCLASS()
@@ -65,9 +80,12 @@ protected:
 
 	FTransform GetPlanetTransform(AStar* System, int32 Index);
 	
-	bool CheckSystemTransform(FTransform SystemTransform);
+	TArray<FVector>* CheckSystemTransform(FTransform SystemTransform);
 
-	FTransform GetCheckedSystemTransform();
+	SystemData GetCheckedSystemData();
+
+
+	FRandomStream RStream;
 
 	TArray<AStar*> Stars;
 	TArray<APlanet*> Planets;

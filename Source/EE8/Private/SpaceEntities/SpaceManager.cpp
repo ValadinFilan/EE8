@@ -4,6 +4,7 @@
 #include "SpaceEntities/SpaceManager.h"
 #include "SpaceEntities/Star.h"
 #include "SpaceEntities/Planet.h"
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 // Sets default values
 ASpaceManager::ASpaceManager()
@@ -17,6 +18,10 @@ ASpaceManager::ASpaceManager()
 void ASpaceManager::BeginPlay()
 {
 	Super::BeginPlay();
+	for (AStar* Star : Stars)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), Star->GetActorLocation().X, Star->GetActorLocation().Y, Star->GetActorLocation().Z));
+	}
 }
 
 // Called every frame
@@ -29,12 +34,12 @@ void ASpaceManager::SetSpawningParameters(FSpaceSpawnParameters Parameters)
 {
 	SpaceSpawnParameters = Parameters;
 
-	FMath::RandInit(Parameters.Seed);
+	RStream = FRandomStream(Parameters.Seed);// specify seed
 }
 
 void ASpaceManager::InitializeSpace()
 {
-	for (int32 i = 0; i < SpaceSpawnParameters.CountOfStars; i++)
+	for (int32 i = 0; i < SpaceSpawnParameters.NumberOfStars; i++)
 	{
 		GenerateStarSystem();
 	}
@@ -43,42 +48,50 @@ void ASpaceManager::InitializeSpace()
 
 void ASpaceManager::GenerateStarSystem()
 {
-	FTransform SystemTransform = GetCheckedSystemTransform();
+	SystemData SystemDat = GetCheckedSystemData();
 
-	AStar* Star = Cast<AStar>(GetWorld()->SpawnActor(StarClass, &SystemTransform));
+	AStar* Star = Cast<AStar>(GetWorld()->SpawnActor(StarClass, &(SystemDat.Transform)));
 	
 	int32 PlanetCount = FMath::FloorToInt32<double>(FMath::RandRange(SpaceSpawnParameters.MinPlanets, SpaceSpawnParameters.MaxPlanets));
-	Star->Initialize(PlanetCount);
+	Star->Initialize(PlanetCount, *(SystemDat.NearestNeighbours));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), SystemDat.NearestNeighbours->Num(), 0, 0));
 	Stars.Add(Star);
-
+	/*
 	for (int32 i = 0; i < PlanetCount; i++)
 	{
 		FTransform PlanetTransform = GetPlanetTransform(Star, i);
 		APlanet* Planet = Cast<APlanet>(GetWorld()->SpawnActor(PlanetClass, &PlanetTransform));
 		Planet->Initialize(i);
 		Planets.Add(Planet);
-	}
+	}*/
 }
 
 FTransform ASpaceManager::GetSystemTransform()
 {
 	FTransform Transform;
+	float Perlin3D;
 
-	Transform.SetLocation(FVector(
-		FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f),
-		FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f),
-		FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f)
-	));
+	do
+	{
+		Transform.SetLocation(FVector(RStream.FRandRange(-1.0f, 1.0f), RStream.FRandRange(-1.0f, 1.0f), RStream.FRandRange(-1.0f, 1.0f)
+			//FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f),
+			//FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f),
+			//FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f)
+		));
 
-	Transform.SetRotation(FRotator(
-		FMath::FRandRange(0.0f, 180.0f),
-		FMath::FRandRange(0.0f, 180.0f),
-		0
-	).Quaternion());
+		Transform.SetRotation(FRotator(
+			RStream.FRandRange(0.0f, 180.0f),
+			RStream.FRandRange(0.0f, 180.0f),
+			0
+		).Quaternion());
+		Perlin3D = FMath::PerlinNoise3D(Transform.GetLocation());
+	} while (RStream.FRand() < Perlin3D);//probability check
+
+	Transform.SetLocation(Transform.GetLocation() * SpaceSpawnParameters.GalaxyRadius);//scale Location
 
 	return Transform;
 }
-
+/*
 FTransform ASpaceManager::GetPlanetTransform(AStar* System, int32 Index)
 {
 	if (!System) return FTransform();
@@ -98,29 +111,57 @@ FTransform ASpaceManager::GetPlanetTransform(AStar* System, int32 Index)
 
 	return Transfrom;
 }
-
-bool ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
+*/
+TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 {
-	for (AStar* Star : Stars)
+	TArray<FVector> NearestNeighboursLoc;
+	FVector NearestNeighbourLocation = FVector(2000000000.0f, 2000000000.0f, 2000000000.0f);//init with max float value
+	
+	for (AStar* Star : Stars)//distance check
 	{
-		if ((SystemTransform.GetLocation() - Star->GetActorLocation()).Length() < SpaceSpawnParameters.SystemRadius * 3.0f)
+		float Distance = (SystemTransform.GetLocation() - Star->GetActorLocation()).Length();
+
+		if (Distance < (SystemTransform.GetLocation() - NearestNeighbourLocation).Length())//update nearest neighbour location
 		{
-			return false;
+			NearestNeighbourLocation = Star->GetActorLocation();
+		}
+			
+		if (Distance < SpaceSpawnParameters.SystemRadius * 3.0f)//min distance check
+		{
+			return nullptr;
+		}
+
+		if (Distance < SpaceSpawnParameters.WeldDistance)//check and return neighbours in radius WeldDistance
+		{
+			NearestNeighboursLoc.Add(Star->GetActorLocation());
 		}
 	}
 
-	return true;
+	if (NearestNeighboursLoc.IsEmpty())//if there`s no neighbours in radius WeldDistance, put the nearest found 
+		NearestNeighboursLoc.Add(NearestNeighbourLocation);
+	for (auto i = 0; i < NearestNeighboursLoc.Num(); i++) {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), NearestNeighboursLoc[i].X, NearestNeighboursLoc[i].Y, NearestNeighboursLoc[i].Z));
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), 1.0, 2.0, 3.0));
+	return &NearestNeighboursLoc;// seems to be not working
 }
 
-FTransform ASpaceManager::GetCheckedSystemTransform()
+SystemData ASpaceManager::GetCheckedSystemData()
 {
 	FTransform Transform = GetSystemTransform();
 
-	while (!CheckSystemTransform(Transform))
+	TArray<FVector>* Neighbours = CheckSystemTransform(Transform);
+
+	while (Neighbours == nullptr)//while nullptr
 	{
 		Transform = GetSystemTransform();
+
+		Neighbours = CheckSystemTransform(Transform);// not ready yet
 	}
 
-	return Transform;
-}
+	SystemData Data = SystemData(Transform, Neighbours);
+	//Data.Transform = Transform;
+	//Data.NearestNeighbours = Neighbours;
 
+	return Data;
+}

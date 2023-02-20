@@ -6,10 +6,10 @@
 
 void AEE8GameModeBase::BeginPlay()
 {
-	InitializeSpace(100, 50);
+	InitializeSpace(100, 30);
 }
 
-void AEE8GameModeBase::InitializeSpace(int32 Seed, int32 CountOfStars)
+void AEE8GameModeBase::InitializeSpace(int32 Seed, int32 NumberOfStars)
 {
 	SpaceManager = Cast<ASpaceManager>(GetWorld()->SpawnActor(SpaceManagerClass));
 
@@ -17,7 +17,7 @@ void AEE8GameModeBase::InitializeSpace(int32 Seed, int32 CountOfStars)
 		FSpaceSpawnParameters SpaceParams;
 
 		SpaceParams.Seed = Seed;
-		SpaceParams.CountOfStars = CountOfStars;
+		SpaceParams.NumberOfStars = NumberOfStars;
 
 		SpaceManager->SetSpawningParameters(SpaceParams);
 		SpaceManager->InitializeSpace();
