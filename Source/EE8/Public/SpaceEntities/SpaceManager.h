@@ -8,7 +8,6 @@
 #include "SpaceManager.generated.h"
 
 class AStar;
-class APlanet;
 
 USTRUCT(BlueprintType)
 struct FSpaceSpawnParameters
@@ -32,7 +31,7 @@ public:
 	int32 MaxPlanets = 10;
 
 	UPROPERTY(EditDefaultsOnly)
-	float WeldDistance = 10000;
+	float WeldDistance = 40000;
 
 	UPROPERTY(EditDefaultsOnly)
 	float GalaxyRadius = 50000;
@@ -69,9 +68,6 @@ protected:
 	FSpaceSpawnParameters SpaceSpawnParameters;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<APlanet> PlanetClass;
-
-	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AStar> StarClass;
 
 	void GenerateStarSystem();
@@ -88,7 +84,6 @@ protected:
 	FRandomStream RStream;
 
 	TArray<AStar*> Stars;
-	TArray<APlanet*> Planets;
 
 public:	
 	// Called every frame

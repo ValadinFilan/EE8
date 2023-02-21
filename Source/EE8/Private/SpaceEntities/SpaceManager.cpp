@@ -3,7 +3,6 @@
 
 #include "SpaceEntities/SpaceManager.h"
 #include "SpaceEntities/Star.h"
-#include "SpaceEntities/Planet.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 // Sets default values
@@ -115,7 +114,7 @@ FTransform ASpaceManager::GetPlanetTransform(AStar* System, int32 Index)
 TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 {
 	TArray<FVector> NearestNeighboursLoc;
-	FVector NearestNeighbourLocation = FVector(2000000000.0f, 2000000000.0f, 2000000000.0f);//init with max float value
+	FVector NearestNeighbourLocation = FVector(2000000.0f, 2000000.0f, 2000000.0f);//init with max float value
 	
 	for (AStar* Star : Stars)//distance check
 	{
@@ -123,6 +122,7 @@ TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 
 		if (Distance < (SystemTransform.GetLocation() - NearestNeighbourLocation).Length())//update nearest neighbour location
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f = FloatVariable / %s = StringVariable"), Distance, ": star"));
 			NearestNeighbourLocation = Star->GetActorLocation();
 		}
 			
@@ -131,7 +131,7 @@ TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 			return nullptr;
 		}
 
-		if (Distance < SpaceSpawnParameters.WeldDistance)//check and return neighbours in radius WeldDistance
+		if (Distance < 40000.0)//check and return neighbours in radius WeldDistance
 		{
 			NearestNeighboursLoc.Add(Star->GetActorLocation());
 		}
@@ -142,7 +142,7 @@ TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 	for (auto i = 0; i < NearestNeighboursLoc.Num(); i++) {
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), NearestNeighboursLoc[i].X, NearestNeighboursLoc[i].Y, NearestNeighboursLoc[i].Z));
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), 1.0, 2.0, 3.0));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), 1.0, 2.0, 3.0));
 	return &NearestNeighboursLoc;// seems to be not working
 }
 
