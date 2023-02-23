@@ -6,15 +6,12 @@
 #include "Components/LineBatchComponent.h"
 #include "SpaceEntities/SpaceObject.h"
 #include "Engine/Engine.h"
-#include <math.h>
-#include "SpaceEntities/NormDistrGenerator.h"
 #include "Star.generated.h"
 
 /**
  * 
  */
 class APlanet;
-class NormDistrGenerator;
 
 USTRUCT(BlueprintType)
 struct FSystemParameters
@@ -26,13 +23,16 @@ public:
 	FSystemParameters() {}
 
 	UPROPERTY(EditDefaultsOnly)
-		int32 MinPlanetNum = 1;
+	int32 MinPlanetNum = 1;
 
 	UPROPERTY(EditDefaultsOnly)
-		int32 MaxPlanetNum = 8;
+	int32 MaxPlanetNum = 8;
 
 	UPROPERTY(EditDefaultsOnly)
-		float MeanPlanetsInterval = 600;
+	float MeanPlanetsInterval = 600.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MinDistanceToStar= 500.f;
 };
 
 UCLASS()
@@ -40,15 +40,13 @@ class EE8_API AStar : public ASpaceObject
 {
 	GENERATED_BODY()
 
-	ULineBatchComponent* LBComponent;
-	FColor DrawColor;
-	FRandomStream RStream;
-	NormDistrGenerator NormGen;
-
 protected:
 
-	UPROPERTY()
+	ULineBatchComponent* LBComponent;
+	FLinearColor DrawColor = FLinearColor(1, 1, 1);
+	FRandomStream RStream;
 
+	UPROPERTY()
 	TArray<FVector> Neighbours;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -57,11 +55,21 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APlanet> PlanetClass;
 
-	void DrawL(); 
-	
+	void DrawConnectionWithStars();
+
+	/// <summary>
+	/// generate orbit and planet using kepler parameters
+	/// </summary>
+	/// <param name="SemiMajorAxis">[0, inf]</param>
+	/// <param name="Eccentricity">[0,1)</param>
+	/// <param name="Inclination">[-360, 360]</param>
+	/// <param name="LongitudeofAN">[-360, 360]</param>
+	/// <returns>pointer to a planet</returns>
 	APlanet* GeneratePlanet(float SemiMajorAxis, float Eccentricity, float Inclination, float LongitudeofAN);
 
 	TArray<APlanet*> Planets;
+
+	static double RandNormDist(double U1, double U2, double mu, double sigma);
 
 public:
 	AStar();

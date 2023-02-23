@@ -19,14 +19,12 @@ ASpaceObject::ASpaceObject()
 void ASpaceObject::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ASpaceObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ASpaceObject::Initialize()

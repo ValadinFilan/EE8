@@ -17,10 +17,6 @@ ASpaceManager::ASpaceManager()
 void ASpaceManager::BeginPlay()
 {
 	Super::BeginPlay();
-	for (AStar* Star : Stars)
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), Star->GetActorLocation().X, Star->GetActorLocation().Y, Star->GetActorLocation().Z));
-	}
 }
 
 // Called every frame
@@ -42,27 +38,19 @@ void ASpaceManager::InitializeSpace()
 	{
 		GenerateStarSystem();
 	}
-
 }
 
 void ASpaceManager::GenerateStarSystem()
 {
-	SystemData SystemDat = GetCheckedSystemData();
+	FSystemData SystemDat = GetCheckedSystemData();
 
 	AStar* Star = Cast<AStar>(GetWorld()->SpawnActor(StarClass, &(SystemDat.Transform)));
 	
 	int32 PlanetCount = FMath::FloorToInt32<double>(FMath::RandRange(SpaceSpawnParameters.MinPlanets, SpaceSpawnParameters.MaxPlanets));
-	Star->Initialize(PlanetCount, *(SystemDat.NearestNeighbours));
+	Star->Initialize(PlanetCount, SystemDat.NearestNeighbours);
+
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), SystemDat.NearestNeighbours->Num(), 0, 0));
 	Stars.Add(Star);
-	/*
-	for (int32 i = 0; i < PlanetCount; i++)
-	{
-		FTransform PlanetTransform = GetPlanetTransform(Star, i);
-		APlanet* Planet = Cast<APlanet>(GetWorld()->SpawnActor(PlanetClass, &PlanetTransform));
-		Planet->Initialize(i);
-		Planets.Add(Planet);
-	}*/
 }
 
 FTransform ASpaceManager::GetSystemTransform()
@@ -72,10 +60,10 @@ FTransform ASpaceManager::GetSystemTransform()
 
 	do
 	{
-		Transform.SetLocation(FVector(RStream.FRandRange(-1.0f, 1.0f), RStream.FRandRange(-1.0f, 1.0f), RStream.FRandRange(-1.0f, 1.0f)
-			//FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f),
-			//FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f),
-			//FMath::FRandRange(-SpaceSpawnParameters.GalaxyRadius / 2.0f, SpaceSpawnParameters.GalaxyRadius / 2.0f)
+		Transform.SetLocation(FVector(
+			RStream.FRandRange(-1.0f, 1.0f), 
+			RStream.FRandRange(-1.0f, 1.0f), 
+			RStream.FRandRange(-1.0f, 1.0f)
 		));
 
 		Transform.SetRotation(FRotator(
@@ -90,31 +78,11 @@ FTransform ASpaceManager::GetSystemTransform()
 
 	return Transform;
 }
-/*
-FTransform ASpaceManager::GetPlanetTransform(AStar* System, int32 Index)
-{
-	if (!System) return FTransform();
 
-	float PlanetRadius = (Index + 1) * SpaceSpawnParameters.SystemRadius / System->GetCountOfPlanets();
-
-	FVector SystemX = System->GetActorRotation().Quaternion().GetForwardVector();
-	FVector SystemY = System->GetActorRotation().Quaternion().GetRightVector();
-
-	float X = FMath::RandRange(-PlanetRadius, PlanetRadius);
-
-	float Y = (FMath::RandBool() ? (1.0f) : (-1.0f)) * FMath::Sqrt(PlanetRadius * PlanetRadius - X * X);
-
-	FTransform Transfrom;
-	Transfrom.SetLocation(System->GetActorLocation() + X * SystemX + Y * SystemY);
-	Transfrom.SetRotation(System->GetActorRotation().Quaternion());
-
-	return Transfrom;
-}
-*/
-TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
+TArray<FVector> ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 {
 	TArray<FVector> NearestNeighboursLoc;
-	FVector NearestNeighbourLocation = FVector(2000000.0f, 2000000.0f, 2000000.0f);//init with max float value
+	FVector NearestNeighbourLocation = FVector(MAX_FLT, MAX_FLT, MAX_FLT);//init with max float value
 	
 	for (AStar* Star : Stars)//distance check
 	{
@@ -122,16 +90,16 @@ TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 
 		if (Distance < (SystemTransform.GetLocation() - NearestNeighbourLocation).Length())//update nearest neighbour location
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f = FloatVariable / %s = StringVariable"), Distance, ": star"));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f = FloatVariable / %s = StringVariable"), Distance, ": star"));
 			NearestNeighbourLocation = Star->GetActorLocation();
 		}
 			
 		if (Distance < SpaceSpawnParameters.SystemRadius * 3.0f)//min distance check
 		{
-			return nullptr;
+			return TArray<FVector>();
 		}
 
-		if (Distance < 40000.0)//check and return neighbours in radius WeldDistance
+		if (Distance < SpaceSpawnParameters.NearestNeighbourRadius)//check and return neighbours in radius WeldDistance
 		{
 			NearestNeighboursLoc.Add(Star->GetActorLocation());
 		}
@@ -139,29 +107,25 @@ TArray<FVector>* ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 
 	if (NearestNeighboursLoc.IsEmpty())//if there`s no neighbours in radius WeldDistance, put the nearest found 
 		NearestNeighboursLoc.Add(NearestNeighbourLocation);
-	for (auto i = 0; i < NearestNeighboursLoc.Num(); i++) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), NearestNeighboursLoc[i].X, NearestNeighboursLoc[i].Y, NearestNeighboursLoc[i].Z));
-	}
+	/*
+		for (int32 i = 0; i < NearestNeighboursLoc.Num(); i++) {
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), NearestNeighboursLoc[i].X, NearestNeighboursLoc[i].Y, NearestNeighboursLoc[i].Z));
+		}
+	*/
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), 1.0, 2.0, 3.0));
-	return &NearestNeighboursLoc;// seems to be not working
+	return NearestNeighboursLoc;// seems to be not working
 }
 
-SystemData ASpaceManager::GetCheckedSystemData()
+FSystemData ASpaceManager::GetCheckedSystemData()
 {
-	FTransform Transform = GetSystemTransform();
+	FTransform Transform;
+	TArray<FVector> Neighbours;
 
-	TArray<FVector>* Neighbours = CheckSystemTransform(Transform);
-
-	while (Neighbours == nullptr)//while nullptr
+	do
 	{
 		Transform = GetSystemTransform();
-
 		Neighbours = CheckSystemTransform(Transform);// not ready yet
-	}
+	} while (Neighbours.IsEmpty());
 
-	SystemData Data = SystemData(Transform, Neighbours);
-	//Data.Transform = Transform;
-	//Data.NearestNeighbours = Neighbours;
-
-	return Data;
+	return FSystemData(Transform, Neighbours);
 }

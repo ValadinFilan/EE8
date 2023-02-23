@@ -19,16 +19,16 @@ public:
 	FSpaceSpawnParameters() {}
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 Seed;
+	int32 Seed = 100;
+	
+	UPROPERTY(EditDefaultsOnly)
+	int32 MinPlanets = 1;
+	
+	UPROPERTY(EditDefaultsOnly)
+	int32 MaxPlanets = 10;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 NumberOfStars;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 MinPlanets = 1;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 MaxPlanets = 10;
 
 	UPROPERTY(EditDefaultsOnly)
 	float WeldDistance = 40000;
@@ -38,17 +38,30 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	float SystemRadius = 3000;
+
+	UPROPERTY(EditDefaultsOnly)
+	float NearestNeighbourRadius = 20000;
 };
 
-struct SystemData{
+USTRUCT(BlueprintType)
+struct FSystemData{
+	GENERATED_BODY()
+
 public:
-	SystemData(FTransform T, TArray<FVector>* NN)
+
+	FSystemData() {};
+
+	FSystemData(FTransform T, TArray<FVector> NN)
 	{
 		Transform = T;
 		NearestNeighbours = NN;
 	}
+
+	UPROPERTY()
 	FTransform Transform;
-	TArray<FVector>* NearestNeighbours;
+
+	UPROPERTY()
+	TArray<FVector> NearestNeighbours;
 };
 
 UCLASS()
@@ -74,11 +87,9 @@ protected:
 
 	FTransform GetSystemTransform();
 
-	FTransform GetPlanetTransform(AStar* System, int32 Index);
-	
-	TArray<FVector>* CheckSystemTransform(FTransform SystemTransform);
+	TArray<FVector> CheckSystemTransform(FTransform SystemTransform);
 
-	SystemData GetCheckedSystemData();
+	FSystemData GetCheckedSystemData();
 
 
 	FRandomStream RStream;
