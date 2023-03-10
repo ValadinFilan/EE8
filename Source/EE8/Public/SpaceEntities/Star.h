@@ -80,6 +80,9 @@ protected:
 	FLinearColor DrawColor = FLinearColor(1, 1, 1);
 	FRandomStream RStream;
 
+	UPROPERTY(BlueprintReadWrite)
+	int32 RSeed;
+
 	UPROPERTY(EditDefaultsOnly)
 	FSystemParameters Parameters;
 

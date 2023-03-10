@@ -20,12 +20,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 Seed = 100;
-	
-	UPROPERTY(EditDefaultsOnly)
-	int32 MinPlanets = 1;
-	
-	UPROPERTY(EditDefaultsOnly)
-	int32 MaxPlanets = 10;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 NumberOfStars;

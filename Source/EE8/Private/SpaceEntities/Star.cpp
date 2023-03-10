@@ -23,6 +23,7 @@ void AStar::Initialize(int32 Seed)
 {
 	Super::Initialize();
 
+	RSeed = Seed;
 	RStream = FRandomStream(Seed);// specify seed
 	SpawnPlanets();
 }

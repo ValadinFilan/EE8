@@ -48,8 +48,8 @@ void ASpaceManager::GenerateStarSystem()
 	FTransform StarTransform= GetCheckedSystemData();
 	AStar* Star = Cast<AStar>(GetWorld()->SpawnActor(StarClass, &(StarTransform)));
 	
-	int32 PlanetCount = FMath::FloorToInt32<double>(FMath::RandRange(SpaceSpawnParameters.MinPlanets, SpaceSpawnParameters.MaxPlanets));
-	Star->Initialize(PlanetCount);
+	int32 Seed = FMath::FloorToInt32<double>(RStream.FRandRange(-100.0f, 100.0f));
+	Star->Initialize(Seed);
 
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), SystemDat.NearestNeighbours->Num(), 0, 0));
 	Stars.Add(Star);
