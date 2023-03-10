@@ -10,6 +10,8 @@ ASpaceManager::ASpaceManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	LBComponent = CreateDefaultSubobject<ULineBatchComponent>(TEXT("LineBatcher"));
+	LBComponent->DefaultLifeTime = 0.0f;
 
 }
 
@@ -38,16 +40,16 @@ void ASpaceManager::InitializeSpace()
 	{
 		GenerateStarSystem();
 	}
+	DrawConnectionWithStars();
 }
 
 void ASpaceManager::GenerateStarSystem()
 {
-	FSystemData SystemDat = GetCheckedSystemData();
-
-	AStar* Star = Cast<AStar>(GetWorld()->SpawnActor(StarClass, &(SystemDat.Transform)));
+	FTransform StarTransform= GetCheckedSystemData();
+	AStar* Star = Cast<AStar>(GetWorld()->SpawnActor(StarClass, &(StarTransform)));
 	
 	int32 PlanetCount = FMath::FloorToInt32<double>(FMath::RandRange(SpaceSpawnParameters.MinPlanets, SpaceSpawnParameters.MaxPlanets));
-	Star->Initialize(PlanetCount, SystemDat.NearestNeighbours);
+	Star->Initialize(PlanetCount);
 
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = FloatVariable / %f = FloatVariable / %f = FloatVariable"), SystemDat.NearestNeighbours->Num(), 0, 0));
 	Stars.Add(Star);
@@ -101,11 +103,13 @@ TArray<FVector> ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 
 		if (Distance < SpaceSpawnParameters.NearestNeighbourRadius)//check and return neighbours in radius WeldDistance
 		{
+			NearestNeighboursLoc.Add(SystemTransform.GetLocation());
 			NearestNeighboursLoc.Add(Star->GetActorLocation());
 		}
 	}
 
-	if (NearestNeighboursLoc.IsEmpty())//if there`s no neighbours in radius WeldDistance, put the nearest found 
+	if (NearestNeighboursLoc.IsEmpty())//if there`s no neighbours in radius WeldDistance, put the nearest found
+		NearestNeighboursLoc.Add(SystemTransform.GetLocation());
 		NearestNeighboursLoc.Add(NearestNeighbourLocation);
 	/*
 		for (int32 i = 0; i < NearestNeighboursLoc.Num(); i++) {
@@ -116,7 +120,7 @@ TArray<FVector> ASpaceManager::CheckSystemTransform(FTransform SystemTransform)
 	return NearestNeighboursLoc;// seems to be not working
 }
 
-FSystemData ASpaceManager::GetCheckedSystemData()
+FTransform ASpaceManager::GetCheckedSystemData()
 {
 	FTransform Transform;
 	TArray<FVector> Neighbours;
@@ -124,8 +128,30 @@ FSystemData ASpaceManager::GetCheckedSystemData()
 	do
 	{
 		Transform = GetSystemTransform();
-		Neighbours = CheckSystemTransform(Transform);// not ready yet
+		Neighbours = CheckSystemTransform(Transform);
 	} while (Neighbours.IsEmpty());
 
-	return FSystemData(Transform, Neighbours);
+	Connections.Append(Neighbours);
+
+	return Transform;
+}
+
+void ASpaceManager::DrawConnectionWithStars()
+{
+	TArray<FBatchedLine> lines;
+	for (int32 i = 1; i < Connections.Num(); i+=2)
+	{
+		FVector Start = Connections[i-1];
+		FVector End = Connections[i];
+
+		FBatchedLine line = FBatchedLine(Start,
+			End,
+			DrawColor,
+			0.0, // for infinity period draw
+			0.0,
+			4
+		);
+		lines.Add(line);
+	}
+	LBComponent->DrawLines(lines);
 }

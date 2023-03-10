@@ -14,3 +14,16 @@ int32 APlanet::GetNumInSystem()
 {
 	return NumInSystem;
 }
+
+bool APlanet::SetPlanetVisibility(bool Visibility)
+{
+	TArray<UStaticMeshComponent*> Meshes;
+	GetComponents(Meshes);
+	for (UStaticMeshComponent*& M : Meshes)
+	{
+		M->SetVisibility(Visibility, true);
+	}
+	SetActorEnableCollision(Visibility);
+	SetActorTickEnabled(Visibility);
+	return false;
+}

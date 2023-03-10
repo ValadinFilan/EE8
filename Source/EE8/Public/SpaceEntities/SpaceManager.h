@@ -43,27 +43,6 @@ public:
 	float NearestNeighbourRadius = 20000;
 };
 
-USTRUCT(BlueprintType)
-struct FSystemData{
-	GENERATED_BODY()
-
-public:
-
-	FSystemData() {};
-
-	FSystemData(FTransform T, TArray<FVector> NN)
-	{
-		Transform = T;
-		NearestNeighbours = NN;
-	}
-
-	UPROPERTY()
-	FTransform Transform;
-
-	UPROPERTY()
-	TArray<FVector> NearestNeighbours;
-};
-
 UCLASS()
 class EE8_API ASpaceManager : public AActor
 {
@@ -74,6 +53,11 @@ public:
 	ASpaceManager();
 
 protected:
+
+	FLinearColor DrawColor = FLinearColor(1, 1, 1);
+
+	ULineBatchComponent* LBComponent;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -89,12 +73,16 @@ protected:
 
 	TArray<FVector> CheckSystemTransform(FTransform SystemTransform);
 
-	FSystemData GetCheckedSystemData();
+	FTransform GetCheckedSystemData();
 
+	void DrawConnectionWithStars();
 
 	FRandomStream RStream;
 
+	UPROPERTY(BlueprintReadWrite)
 	TArray<AStar*> Stars;
+
+	TArray<FVector> Connections;
 
 public:	
 	// Called every frame

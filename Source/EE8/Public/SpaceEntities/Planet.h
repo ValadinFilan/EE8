@@ -25,4 +25,7 @@ public:
 
 	int32 GetNumInSystem();
 
+	UFUNCTION(BlueprintCallable)
+	bool SetPlanetVisibility(bool Visibility);
+
 };

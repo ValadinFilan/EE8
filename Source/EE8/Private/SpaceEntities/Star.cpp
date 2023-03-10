@@ -19,33 +19,12 @@ AStar::AStar()
 	LBComponent->DefaultLifeTime = 0.0f;
 }
 
-void AStar::Initialize(int32 Seed, TArray<FVector> NearestNeighbours)
+void AStar::Initialize(int32 Seed)
 {
 	Super::Initialize();
 
 	RStream = FRandomStream(Seed);// specify seed
-	Neighbours = NearestNeighbours;
-	DrawConnectionWithStars();
 	SpawnPlanets();
-}
-
-void AStar::DrawConnectionWithStars()
-{
-	TArray<FBatchedLine> lines;
-	for (int32 i = 0; i < Neighbours.Num(); i++)
-	{
-		FVector Start = FVector(Neighbours[i].X, Neighbours[i].Y, Neighbours[i].Z);
-
-		FBatchedLine line = FBatchedLine(Start,
-			GetActorLocation(),
-			DrawColor,
-			0.0, // for infinity period draw
-			0.0,
-			4
-		);
-		lines.Add(line);
-	}
-	LBComponent->DrawLines(lines);
 }
 
 void AStar::SpawnPlanets()
@@ -58,14 +37,42 @@ void AStar::SpawnPlanets()
 		const float Eccentricity = FMath::Abs(FMath::Min(RandNormDist(RStream.FRand(), RStream.FRand(), 0.0f, 0.2f), 0.9));
 		const float Inclination = RandNormDist(RStream.FRand(), RStream.FRand(), 0.0f, 5.0f);
 		const float LongitudeofAN = RandNormDist(RStream.FRand(), RStream.FRand(), 0.0f, 5.0f);
+		const float TrueAnomaly = RStream.FRandRange(-PI, PI);
 
-		Planets.Add(GeneratePlanet(SemiMajorAxis, Eccentricity, Inclination, LongitudeofAN));
+		Orbits.Add(FOrbitParameters(SemiMajorAxis, Eccentricity, Inclination, LongitudeofAN, TrueAnomaly));
+		FTransform PlanetTransform = GeneratePlanetTransform(SemiMajorAxis, Eccentricity, Inclination, LongitudeofAN, TrueAnomaly);
+		APlanet* Planet = GetWorld()->SpawnActor<APlanet>(PlanetClass, PlanetTransform);
+		Planets.Add(Planet);
 
 		Orbit = SemiMajorAxis;
 	}
 }
 
-APlanet* AStar::GeneratePlanet(float SemiMajorAxis, float Eccentricity, float Inclination, float LongitudeofAN)//gen orbit and planet using kepler parameters
+bool AStar::GetPlanetsVisibility()
+{
+	return PlanetsVisibility;
+}
+
+void AStar::SetPlanetsVisibility(bool Visibility)
+{
+	if (Visibility)
+	{
+		for (int32 i = 0; i != Planets.Num(); i++) {
+			Planets[i]->SetPlanetVisibility(false);
+			GeneratePlanetTransform(Orbits[i].SemiMajorAxis, Orbits[i].Eccentricity, Orbits[i].Inclination, Orbits[i].LongitudeofAN, Orbits[i].TrueAnomaly);
+		}
+	}
+	else
+	{
+		for (int32 i = 0; i != Planets.Num(); i++) {
+			Planets[i]->SetPlanetVisibility(false);
+		}
+		LBComponent->Flush();
+		PlanetsVisibility = false;
+	}
+}
+
+FTransform AStar::GeneratePlanetTransform(float SemiMajorAxis, float Eccentricity, float Inclination, float LongitudeofAN, float TrueAnomaly)//gen orbit and planet using kepler parameters
 {
 	const FRotator Rot(FRotator(Inclination, 0, LongitudeofAN) + GetActorRotation()); //orbit personal rotator
 
@@ -79,15 +86,10 @@ APlanet* AStar::GeneratePlanet(float SemiMajorAxis, float Eccentricity, float In
 	Y = Rot.RotateVector(Y);
 
 	LBComponent->DrawCircle(Center, X, Y, DrawColor.ToFColor(true), 1.0f, 64, 4);
-	
-	float PlanetRandomSeed = RStream.FRandRange(-PI, PI);// defines planet location along an orbit
 
-	FVector PlanetLocation = Rot.RotateVector(FVector(sin(PlanetRandomSeed) * SemiMajorAxis, cos(PlanetRandomSeed) * SemiMinorAxis, 0)) + Center;
+	FVector PlanetLocation = Rot.RotateVector(FVector(sin(TrueAnomaly) * SemiMajorAxis, cos(TrueAnomaly) * SemiMinorAxis, 0)) + Center;
 	FTransform PlanetTransform = FTransform(GetActorRotation().Quaternion(), PlanetLocation);
-
-	APlanet* Planet = GetWorld()->SpawnActor<APlanet>(PlanetClass, PlanetTransform);
 	//Planet->Initialize(i);
 
-	return Planet;
+	return PlanetTransform;
 }
-
