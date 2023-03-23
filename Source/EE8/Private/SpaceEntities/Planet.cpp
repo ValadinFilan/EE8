@@ -3,6 +3,11 @@
 
 #include "SpaceEntities/Planet.h"
 
+APlanet::APlanet()
+{
+	bReplicates = true;
+}
+
 void APlanet::Initialize(int32 Index)
 {
 	Super::Initialize();

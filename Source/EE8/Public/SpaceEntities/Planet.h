@@ -16,6 +16,8 @@ class EE8_API APlanet : public ASpaceObject
 
 protected:
 
+	APlanet();
+
 	UPROPERTY()
 	int32 NumInSystem;
 

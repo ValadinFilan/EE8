@@ -4,38 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Camera/CameraComponent.h"
-#include "SpaceObject.generated.h"
+#include "StarShip.generated.h"
 
 UCLASS()
-class EE8_API ASpaceObject : public AActor
+class EE8_API AStarShip : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASpaceObject();
-
-	UPROPERTY(EditDefaultsOnly)
-	UMaterial* MaterialBase;
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ObjectMesh;
-
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* ViewCamera;
+	AStarShip();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UMaterialInstanceDynamic* Material;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void Initialize();
-
-	virtual void CreateCosmetic();
 };

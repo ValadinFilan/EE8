@@ -9,7 +9,7 @@
 
 class AStar;
 
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, Atomic)
 struct FSpaceSpawnParameters
 {
 	GENERATED_BODY()
@@ -28,7 +28,7 @@ public:
 	int32 MaxPlanets = 10;
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 NumberOfStars;
+	int32 NumberOfStars = 0;
 
 	UPROPERTY(EditDefaultsOnly)
 	float WeldDistance = 40000;
@@ -43,7 +43,7 @@ public:
 	float NearestNeighbourRadius = 20000;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, Atomic)
 struct FSystemData{
 	GENERATED_BODY()
 
@@ -77,8 +77,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly)
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const override;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_SpaceSpawnParameters)
 	FSpaceSpawnParameters SpaceSpawnParameters;
+
+	UFUNCTION()
+	void OnRep_SpaceSpawnParameters();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AStar> StarClass;
@@ -90,7 +95,6 @@ protected:
 	TArray<FVector> CheckSystemTransform(FTransform SystemTransform);
 
 	FSystemData GetCheckedSystemData();
-
 
 	FRandomStream RStream;
 
