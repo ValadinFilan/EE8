@@ -3,7 +3,7 @@
 
 #include "SpaceHUD.h"
 #include "Blueprint/UserWidget.h"
-#include "SpacePlayerState.h"
+#include "Player/StarPlayerState.h"
 
 void ASpaceHUD::BeginPlay()
 {

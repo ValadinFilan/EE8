@@ -6,10 +6,6 @@
 APlanet::APlanet()
 {
 	bReplicates = true;
-}
-
-void APlanet::Initialize(int32 Index)
-{
 	PrimaryActorTick.bCanEverTick = true;
 
 	CloudSphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CloudSphere"));
