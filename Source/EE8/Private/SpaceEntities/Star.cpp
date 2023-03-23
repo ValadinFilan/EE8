@@ -10,6 +10,8 @@ AStar::AStar()
 {
 	LBComponent = CreateDefaultSubobject<ULineBatchComponent>(TEXT("LineBatcher"));
 	LBComponent->DefaultLifeTime = 0.0f;
+
+	bReplicates = true;
 }
 
 void AStar::Initialize(int32 Seed)

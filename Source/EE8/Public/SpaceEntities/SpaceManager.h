@@ -9,7 +9,7 @@
 
 class AStar;
 
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, Atomic)
 struct FSpaceSpawnParameters
 {
 	GENERATED_BODY()
@@ -55,8 +55,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly)
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const override;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_SpaceSpawnParameters)
 	FSpaceSpawnParameters SpaceSpawnParameters;
+
+	UFUNCTION()
+	void OnRep_SpaceSpawnParameters();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AStar> StarClass;

@@ -3,7 +3,8 @@
 
 #include "SpaceEntities/SpaceManager.h"
 #include "SpaceEntities/Star.h"
-#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ASpaceManager::ASpaceManager()
@@ -13,12 +14,25 @@ ASpaceManager::ASpaceManager()
 	LBComponent = CreateDefaultSubobject<ULineBatchComponent>(TEXT("LineBatcher"));
 	LBComponent->DefaultLifeTime = 0.0f;
 
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
 void ASpaceManager::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ASpaceManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASpaceManager, SpaceSpawnParameters);
+}
+
+void ASpaceManager::OnRep_SpaceSpawnParameters()
+{
+	//InitializeSpace();
 }
 
 // Called every frame
@@ -30,7 +44,6 @@ void ASpaceManager::Tick(float DeltaTime)
 void ASpaceManager::SetSpawningParameters(FSpaceSpawnParameters Parameters)
 {
 	SpaceSpawnParameters = Parameters;
-
 	RStream = FRandomStream(Parameters.Seed);// specify seed
 }
 
