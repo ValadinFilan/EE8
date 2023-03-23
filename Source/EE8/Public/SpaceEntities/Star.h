@@ -78,10 +78,6 @@ protected:
 
 	ULineBatchComponent* LBComponent;
 	FLinearColor DrawColor = FLinearColor(1, 1, 1);
-	FRandomStream RStream;
-
-	UPROPERTY(BlueprintReadWrite)
-	int32 RSeed;
 
 	UPROPERTY(EditDefaultsOnly)
 	FSystemParameters Parameters;
@@ -104,8 +100,6 @@ protected:
 
 	TArray<FOrbitParameters> Orbits;
 
-	static double RandNormDist(double U1, double U2, double mu, double sigma);
-
 public:
 	AStar();
 
@@ -115,6 +109,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	bool PlanetsVisibility = false;
+
+	void CreateCosmetic_Implementation() override;
 
 	UFUNCTION(BlueprintCallable)
 	void SetPlanetsVisibility(bool Visibility);

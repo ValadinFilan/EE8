@@ -35,10 +35,18 @@ void ASpaceObject::Initialize()
 	}
 }
 
-void ASpaceObject::CreateCosmetic()
+void ASpaceObject::CreateCosmetic_Implementation()
 {
-	Material = ObjectMesh->CreateDynamicMaterialInstance(0, MaterialBase);
-	ObjectMesh->SetMaterial(0, Material);
-	Material->SetScalarParameterValue(FName(TEXT("CosmeticSeed")), FMath::RandRange(0, 1));
+	BaseMaterial = ObjectMesh->GetMaterial(0);
+	BaseDynamicMaterial = ObjectMesh->CreateDynamicMaterialInstance(0, BaseMaterial);
+	ObjectMesh->SetMaterial(0, BaseDynamicMaterial);
+	BaseDynamicMaterial->SetScalarParameterValue(FName(TEXT("CosmeticSeed")), FMath::RandRange(0, 1));
 }
 
+double ASpaceObject::RandNormDist(double U1, double U2, double mu, double sigma)
+{
+	double result = FMath::Sqrt(-2 * log(U1)) * FMath::Cos(2 * PI * U2);
+	result = result * sigma + mu;
+
+	return result;
+}

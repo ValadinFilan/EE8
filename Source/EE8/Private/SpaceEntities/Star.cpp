@@ -5,13 +5,6 @@
 #include "SpaceEntities/Planet.h"
 #include "DrawDebugHelpers.h"
 
-double AStar::RandNormDist(double U1, double U2, double mu, double sigma)
-{
-	double result = FMath::Sqrt(-2 * log(U1)) * FMath::Cos(2 * PI * U2);
-	result = result * sigma + mu;
-
-	return result;
-}
 
 AStar::AStar()
 {
@@ -21,17 +14,19 @@ AStar::AStar()
 
 void AStar::Initialize(int32 Seed)
 {
-	Super::Initialize();
-
 	RSeed = Seed;
 	RStream = FRandomStream(Seed);// specify seed
+	Scale = FVector(RStream.FRandRange(1.0f, 10.0f));//RandNormDist(RStream.FRand(), RStream.FRand(), 0.0f, 0.5f))
+	SetActorScale3D(Scale);
 	SpawnPlanets();
+
+	Super::Initialize();
 }
 
 void AStar::SpawnPlanets()
 {
 	const int32 MaxNum = RStream.RandRange(Parameters.MinPlanetNum, Parameters.MaxPlanetNum);
-	float Orbit = Parameters.MinDistanceToStar;
+	float Orbit = Parameters.MinDistanceToStar + (Scale.X / 2.0f) * 100;
 	for (int i = 0; i < MaxNum; i++)
 	{
 		const float SemiMajorAxis = Orbit + RandNormDist(RStream.FRand(), RStream.FRand(), Parameters.MeanPlanetsInterval, 100.0f);
@@ -43,6 +38,7 @@ void AStar::SpawnPlanets()
 		Orbits.Add(FOrbitParameters(SemiMajorAxis, Eccentricity, Inclination, LongitudeofAN, TrueAnomaly));
 		FTransform PlanetTransform = GeneratePlanetTransform(SemiMajorAxis, Eccentricity, Inclination, LongitudeofAN, TrueAnomaly);
 		APlanet* Planet = GetWorld()->SpawnActor<APlanet>(PlanetClass, PlanetTransform);
+		Planet->Initialize(RStream.RandRange(-100, 100));
 		Planets.Add(Planet);
 
 		Orbit = SemiMajorAxis;
@@ -85,12 +81,20 @@ FTransform AStar::GeneratePlanetTransform(float SemiMajorAxis, float Eccentricit
 
 	X = Rot.RotateVector(X);
 	Y = Rot.RotateVector(Y);
-
-	LBComponent->DrawCircle(Center, X, Y, DrawColor.ToFColor(true), 1.0f, 64, 4);
+	LBComponent->DrawCircle(Center, X, Y, DrawColor.ToFColor(true), 1.0f, 256, 1);//можно переписать LineBatcher и сделать чтоб оно было нужной толщины!!!!
 
 	FVector PlanetLocation = Rot.RotateVector(FVector(sin(TrueAnomaly) * SemiMajorAxis, cos(TrueAnomaly) * SemiMinorAxis, 0)) + Center;
 	FTransform PlanetTransform = FTransform(GetActorRotation().Quaternion(), PlanetLocation);
 	//Planet->Initialize(i);
 
 	return PlanetTransform;
+}
+
+void AStar::CreateCosmetic_Implementation()
+{
+	BaseDynamicMaterial = ObjectMesh->CreateDynamicMaterialInstance(0, BaseMaterial);
+	ObjectMesh->SetMaterial(0, BaseDynamicMaterial);
+	BaseDynamicMaterial->SetScalarParameterValue(FName(TEXT("Temperature")), RStream.FRand());
+	BaseDynamicMaterial->SetScalarParameterValue(FName(TEXT("Luminosity")), 30.0);
+	//BaseDynamicMaterial->GetParameters
 }

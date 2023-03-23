@@ -12,18 +12,27 @@
 UCLASS()
 class EE8_API APlanet : public ASpaceObject
 {
-	GENERATED_BODY()
+	GENERATED_BODY() 
 
 protected:
 
-	UPROPERTY()
-	int32 NumInSystem;
+	UMaterialInterface* CloudsMaterial;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* CloudSphere;
+
+	//UMaterialInstanceDynamic* CloudsDynamicMaterial;
+
+
+	//UMaterialInstanceDynamic* SetCloudsMaterial();
 
 public:
 
-	void Initialize(int32 Index);
+	APlanet();
 
-	int32 GetNumInSystem();
+	void Initialize(int32 CosmeticSeed);
+
+	int32 GetCosmeticSeed();
 
 	UFUNCTION(BlueprintCallable)
 	bool SetPlanetVisibility(bool Visibility);

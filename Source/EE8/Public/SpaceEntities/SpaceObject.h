@@ -15,17 +15,26 @@ public:
 	// Sets default values for this actor's properties
 	ASpaceObject();
 
-	UPROPERTY(EditDefaultsOnly)
-	UMaterial* MaterialBase;
+	UMaterialInterface* BaseMaterial;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* ObjectMesh;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UMaterialInstanceDynamic* Material;
+	UMaterialInstanceDynamic* BaseDynamicMaterial;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FRandomStream RStream;
+
+	FVector Scale;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 RSeed;
+
+	static double RandNormDist(double U1, double U2, double mu, double sigma);
 
 public:	
 	// Called every frame
@@ -33,5 +42,6 @@ public:
 
 	virtual void Initialize();
 
-	virtual void CreateCosmetic();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CreateCosmetic();
 };

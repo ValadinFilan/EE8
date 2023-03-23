@@ -143,14 +143,13 @@ void ASpaceManager::DrawConnectionWithStars()
 	{
 		FVector Start = Connections[i-1];
 		FVector End = Connections[i];
-
 		FBatchedLine line = FBatchedLine(Start,
 			End,
 			DrawColor,
 			0.0, // for infinity period draw
 			0.0,
 			4
-		);
+		);//можно переписать LineBatcher и сделать чтоб оно не дрожало!!!!
 		lines.Add(line);
 	}
 	LBComponent->DrawLines(lines);
