@@ -17,6 +17,7 @@ void AStarPlayerController::Tick(float DeltaSeconds)
 
 void AStarPlayerController::GetPlanetView()
 {
+
 }
 
 void AStarPlayerController::SendShipToPlanet()
@@ -35,7 +36,18 @@ void AStarPlayerController::GetFreeShip()
 
 	CurrentShip = StarPlayerState->PlayerShips[0];
 
-	SnapToCurrentSpaceObject(CurrentShip.Get());
+	SnapToSpaceObject(CurrentShip.Get());
+}
+
+void AStarPlayerController::GetFreePlanet()
+{
+	AStarPlayerState* StarPlayerState = GetPlayerState<AStarPlayerState>();
+
+	if (!StarPlayerState || StarPlayerState->PlayerPlanets.Num() < 1) return;
+
+	CurrentPlanet = StarPlayerState->PlayerPlanets[0];
+
+	SnapToSpaceObject(CurrentPlanet.Get());
 }
 
 void AStarPlayerController::DisolveSpaceSnapping()
@@ -51,7 +63,7 @@ void AStarPlayerController::DisolveSpaceSnapping()
 	SetViewTargetWithBlend(this, 0.7f);
 }
 
-void AStarPlayerController::SnapToCurrentSpaceObject(ASpaceObject* SpaceObject)
+void AStarPlayerController::SnapToSpaceObject(ASpaceObject* SpaceObject)
 {
 	SetViewTargetWithBlend(SpaceObject, 0.7f);
 }

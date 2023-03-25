@@ -6,6 +6,8 @@
 #include "SpaceEntities/SpaceObject.h"
 #include "Ship.generated.h"
 
+class AStarPlayerState;
+
 /**
  * 
  */
@@ -20,13 +22,20 @@ public:
 
 	virtual void Tick(float DeltaSeconds);
 
+	void Initialize(AStarPlayerState* PlayerState);
+
 	UPROPERTY(EditDefaultsOnly)
 	float Velocity;
 
 	UPROPERTY(EditDefaultsOnly)
 	float AvaliableOrbit;
 
+	UPROPERTY(VisibleAnywhere)
+	TWeakObjectPtr<ASpaceObject> ConnectionTraget;
+
 	void GoTo(ASpaceObject* Target);
+
+	AStarPlayerState* OwningPlayerState;
 
 	TWeakObjectPtr<ASpaceObject> TargetSpaceObject;
 };
