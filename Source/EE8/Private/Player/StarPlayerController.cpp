@@ -5,6 +5,7 @@
 #include "Player/StarPlayerState.h"
 #include "SpaceEntities/SpaceObject.h"
 #include "SpaceEntities/Ship.h"
+#include "SpaceHUD.h"
 
 AStarPlayerController::AStarPlayerController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -17,6 +18,10 @@ void AStarPlayerController::Tick(float DeltaSeconds)
 
 void AStarPlayerController::GetPlanetView()
 {
+	ASpaceHUD* HUD = GetHUD<ASpaceHUD>();
+	if (HUD) {
+		HUD->SetUIState(EUIGameStates::Planet);
+	}
 }
 
 void AStarPlayerController::SendShipToPlanet()

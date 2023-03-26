@@ -26,6 +26,10 @@ void APlanet::Initialize(int32 CosmeticSeed)
 	//ObjectMesh->SetMaterial(0, Material);
 	//Material->SetScalarParameterValue(FName(TEXT("CosmeticSeed")), FMath::RandRange(0, 1));
 	Super::Initialize();
+	Info.Population = RStream.RandRange(10000, MAX_int32);
+	Info.EnergyIncome = RStream.FRandRange(1.f, 100.f);//delete
+	Info.MetalIncome = RStream.FRandRange(1.f, 100.f);//delete
+	Info.CarbonIncome = RStream.FRandRange(1.f, 100.f);//delete
 }
 
 /* //не удалять - это на будущее

@@ -28,11 +28,12 @@ class EE8_API ASpaceHUD : public AHUD
 	GENERATED_BODY()
 
 public:
-	EUIGameStates CurentUIGameState = EUIGameStates::MainMenu;
+	EUIGameStates CurentUIGameState = EUIGameStates::Planet;
 
+	UPROPERTY(VisibleAnywhere)
 	TMap<EUIGameStates, UUserWidget*> GameWidgets;
 
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TMap<EUIGameStates, TSubclassOf<UUserWidget>> GameWidgetClasses;
 
 	virtual void BeginPlay();
@@ -40,4 +41,7 @@ public:
 	void Initialize();
 
 	void SetUIState(EUIGameStates UIState);
+
+	UFUNCTION()
+	void HideCurrentWidget();
 };

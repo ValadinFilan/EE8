@@ -9,6 +9,38 @@
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FPlanetInfo
+{
+	GENERATED_BODY()
+
+public:
+
+	FPlanetInfo() {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		FString Name = FString("Emanon");
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int32 Population = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		FString Type = FString("Terrestrial");
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		FString Description = FString("Blah-blah-blah...");
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		float EnergyIncome = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		float MetalIncome = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		float CarbonIncome = 0.f;
+};
+
 UCLASS()
 class EE8_API APlanet : public ASpaceObject
 {
@@ -29,6 +61,9 @@ protected:
 public:
 
 	APlanet();
+
+	UPROPERTY(EditAnywhere)
+	FPlanetInfo Info;
 
 	void Initialize(int32 CosmeticSeed);
 
