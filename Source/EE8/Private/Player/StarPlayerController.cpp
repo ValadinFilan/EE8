@@ -18,9 +18,12 @@ void AStarPlayerController::Tick(float DeltaSeconds)
 
 void AStarPlayerController::GetPlanetView()
 {
-	ASpaceHUD* HUD = GetHUD<ASpaceHUD>();
-	if (HUD) {
-		HUD->SetUIState(EUIGameStates::Planet);
+	if (!CurrentSpaceObject.IsValid()) return;
+	
+	if (APlanet* Planet = Cast<APlanet>(CurrentSpaceObject))
+	{
+		CurrentPlanet = Planet;
+		SnapToSpaceObject(CurrentPlanet.Get());
 	}
 }
 
@@ -40,7 +43,18 @@ void AStarPlayerController::GetFreeShip()
 
 	CurrentShip = StarPlayerState->PlayerShips[0];
 
-	SnapToCurrentSpaceObject(CurrentShip.Get());
+	SnapToSpaceObject(CurrentShip.Get());
+}
+
+void AStarPlayerController::GetFreePlanet()
+{
+	AStarPlayerState* StarPlayerState = GetPlayerState<AStarPlayerState>();
+
+	if (!StarPlayerState || StarPlayerState->PlayerPlanets.Num() < 1) return;
+
+	CurrentPlanet = StarPlayerState->PlayerPlanets[0];
+
+	SnapToSpaceObject(CurrentPlanet.Get());
 }
 
 void AStarPlayerController::DisolveSpaceSnapping()
@@ -56,9 +70,18 @@ void AStarPlayerController::DisolveSpaceSnapping()
 	SetViewTargetWithBlend(this, 0.7f);
 }
 
-void AStarPlayerController::SnapToCurrentSpaceObject(ASpaceObject* SpaceObject)
+void AStarPlayerController::SnapToSpaceObject(ASpaceObject* SpaceObject)
 {
 	SetViewTargetWithBlend(SpaceObject, 0.7f);
+
+	if (Cast<APlanet>(SpaceObject))
+	{
+		GetHUD<ASpaceHUD>()->SetUIState(EUIGameStates::Planet);
+	}
+	else
+	{
+		GetHUD<ASpaceHUD>()->SetUIState(EUIGameStates::SystemOverview);
+	}
 }
 
 ASpaceObject* AStarPlayerController::TraceSpaceObject()

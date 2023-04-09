@@ -11,8 +11,10 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FEnergyIncomeUpdate, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMetalIncomeUpdate, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FCarbonIncomeUpdate, float);
-DECLARE_MULTICAST_DELEGATE_OneParam(FPlanetAdd, APlanet);
-DECLARE_MULTICAST_DELEGATE_OneParam(FPlanetRemove, APlanet);
+DECLARE_MULTICAST_DELEGATE_OneParam(FPlanetAdd, APlanet*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FPlanetRemove, APlanet*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FShipAdd, AShip*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FShipRemove, AShip*);
 
 /**
  * 
@@ -23,40 +25,58 @@ class EE8_API AStarPlayerState : public APlayerState
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(VisibleAnywhere)
 	int64 Energy;
 
+	UPROPERTY(VisibleAnywhere)
 	int64 Metal;
 
+	UPROPERTY(VisibleAnywhere)
 	int64 Carbon;
 
+	UPROPERTY(VisibleAnywhere)
 	float EnergyIncome;
 
+	UPROPERTY(VisibleAnywhere)
 	float MetalIncome;
 
+	UPROPERTY(VisibleAnywhere)
 	float CarbonIncome;
-
+	
+	UPROPERTY(VisibleAnywhere)
 	TArray<APlanet*> CapturedPlanets;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AShip> SpawningShipClass;
 
+	UPROPERTY(VisibleAnywhere)
 	TArray<AShip*> PlayerShips;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<APlanet*> PlayerPlanets;
 
 	FEnergyIncomeUpdate OnEnergyIncomeUpdate;
 	FMetalIncomeUpdate OnMetalIncomeUpdate;
 	FCarbonIncomeUpdate OnCarbonIncomeUpdate;
 	FPlanetAdd OnPlanetAdd;
 	FPlanetRemove OnPlanetRemove;
+	FShipAdd OnShipAdd;
+	FShipRemove OnShipRemove;
 
-	float AddEnergyIncome(float Increment);
+	void AddEnergyIncome(float Increment);
 
-	float AddMetalIncome(float Increment);
+	void AddMetalIncome(float Increment);
 
-	float AddCarbonIncome(float Increment);
+	void AddCarbonIncome(float Increment);
 
-	TArray<APlanet*> AddCapturedPlanet(APlanet Planet);
+	void AddCapturedPlanet(APlanet* Planet);
 
-	TArray<APlanet*> RemoveCapturedPlanet(APlanet Planet);
+	void RemoveCapturedPlanet(APlanet* Planet);
+
+	void AddShip(AShip* Ship);
+	
+	void RemoveShip(AShip* Ship);
+	
 	virtual void BeginPlay() override;
 
 };

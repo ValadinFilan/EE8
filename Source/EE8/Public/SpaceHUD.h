@@ -28,6 +28,7 @@ class EE8_API ASpaceHUD : public AHUD
 	GENERATED_BODY()
 
 public:
+
 	EUIGameStates CurentUIGameState = EUIGameStates::Planet;
 
 	UPROPERTY(VisibleAnywhere)

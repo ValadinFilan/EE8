@@ -17,28 +17,45 @@ struct FPlanetInfo
 
 public:
 
-	FPlanetInfo() {}
+	//FPlanetInfo(){}
+
+	FPlanetInfo(FString l_Name,
+		int32 l_Population,
+		FString l_Type,
+		FString l_Description,
+		float l_EnergyIncome,
+		float l_MetalIncome,
+		float l_CarbonIncome)
+	{
+		Name = l_Name;
+		Population = l_Population;
+		Type = l_Type = l_Description;
+		Description = l_Description;
+		EnergyIncome = l_EnergyIncome;
+		MetalIncome = l_MetalIncome;
+		CarbonIncome = l_CarbonIncome;
+	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FString Name = FString("Emanon");
+		FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		int32 Population = 0;
+		int32 Population;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FString Type = FString("Terrestrial");
+		FString Type;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FString Description = FString("Blah-blah-blah...");
+		FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float EnergyIncome = 0.f;
+		float EnergyIncome;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float MetalIncome = 0.f;
+		float MetalIncome;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float CarbonIncome = 0.f;
+		float CarbonIncome;
 };
 
 UCLASS()
@@ -62,8 +79,14 @@ public:
 
 	APlanet();
 
-	UPROPERTY(EditAnywhere)
-	FPlanetInfo Info;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FPlanetInfo Info = FPlanetInfo(FString("Emanon"),
+			1000,
+			FString("Terrestrial"),
+			FString("Blah-blah-blah..."),
+			1.0,
+			1.0,
+			1.0);
 
 	void Initialize(int32 CosmeticSeed);
 

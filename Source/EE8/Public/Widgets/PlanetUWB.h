@@ -8,7 +8,8 @@
 
 class ASpaceHUD;
 class UButton;
-class UTextLayoutWidget;
+class UTextBlock;
+class APlanet;
 
 /**
  * 
@@ -25,29 +26,29 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UButton* ExitButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetNameMainTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetNameMainTextBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetNameTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetNameTextBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetTypeTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetTypeTextBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetDescTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetDescTextBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetResourcesTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetResourcesTextBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetResourcesDescTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetResourcesDescTextBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetEffectsTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetEffectsTextBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UTextLayoutWidget* PlanetEffectsDescTextBox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetEffectsDescTextBox;
 
-	void InitializePlanetWidget(ASpaceHUD* HUD);
+	void InitializePlanetWidget(APlanet* Planet);
 };

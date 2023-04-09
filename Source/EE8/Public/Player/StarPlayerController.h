@@ -8,6 +8,7 @@
 
 class ASpaceObject;
 class AShip;
+class APlanet;
 
 /**
  * 
@@ -25,6 +26,7 @@ public:
 	TWeakObjectPtr<ASpaceObject> CurrentSpaceObject;
 
 	TWeakObjectPtr<AShip> CurrentShip;
+	TWeakObjectPtr<APlanet> CurrentPlanet;
 
 	UFUNCTION(BlueprintCallable)
 	void GetPlanetView();
@@ -36,11 +38,14 @@ public:
 	void GetFreeShip();
 
 	UFUNCTION(BlueprintCallable)
+	void GetFreePlanet();
+
+	UFUNCTION(BlueprintCallable)
 	void DisolveSpaceSnapping();
 
 protected:
 
-	void SnapToCurrentSpaceObject(ASpaceObject* SpaceObject);
+	void SnapToSpaceObject(ASpaceObject* SpaceObject);
 
 	ASpaceObject* TraceSpaceObject();
 };

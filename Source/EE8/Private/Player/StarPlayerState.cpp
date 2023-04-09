@@ -2,49 +2,68 @@
 
 
 #include "Player/StarPlayerState.h"
+#include "..\..\Public\Player\StarPlayerState.h"
 
 void AStarPlayerState::BeginPlay()
 {
 	AShip* Ship = GetWorld()->SpawnActor<AShip>(SpawningShipClass);
+	Ship->Initialize(this);
 	PlayerShips.Add(Ship);
 }
 
-float AStarPlayerState::AddEnergyIncome(float Increment)
+void AStarPlayerState::AddEnergyIncome(float Increment)
 {
 	EnergyIncome += Increment;
 	if (EnergyIncome < 0) EnergyIncome = 0;
 	OnEnergyIncomeUpdate.Broadcast(EnergyIncome);
-	return EnergyIncome;
 }
 
-float AStarPlayerState::AddMetalIncome(float Increment)
+void AStarPlayerState::AddMetalIncome(float Increment)
 {
 	MetalIncome += Increment;
 	if (MetalIncome < 0) MetalIncome = 0;
 	OnMetalIncomeUpdate.Broadcast(MetalIncome);
-	return MetalIncome;
 }
 
-float AStarPlayerState::AddCarbonIncome(float Increment)
+void AStarPlayerState::AddCarbonIncome(float Increment)
 {
 	CarbonIncome += Increment;
 	if (MetalIncome < 0) MetalIncome = 0;
 	OnCarbonIncomeUpdate.Broadcast(CarbonIncome);
-	return CarbonIncome;
 }
 
-TArray<APlanet*> AStarPlayerState::AddCapturedPlanet(APlanet Planet)
+void AStarPlayerState::AddCapturedPlanet(APlanet* Planet)
 {
-	if (!CapturedPlanets.Contains(&Planet))
-		CapturedPlanets.Add(&Planet);
-	//OnPlanetAdd.Broadcast(Planet);
-	return CapturedPlanets;
+	if (Planet && !PlayerPlanets.Contains(Planet))
+	{
+		PlayerPlanets.Add(Planet);
+		OnPlanetAdd.Broadcast(Planet);
+	}
 }
 
-TArray<APlanet*> AStarPlayerState::RemoveCapturedPlanet(APlanet Planet)
+void AStarPlayerState::RemoveCapturedPlanet(APlanet* Planet)
 {
-	if (CapturedPlanets.Contains(&Planet))
-		CapturedPlanets.Remove(&Planet);
-	//OnPlanetRemove.Broadcast(Planet);
-	return CapturedPlanets;
+	if (Planet && PlayerPlanets.Contains(Planet))
+	{
+		PlayerPlanets.Remove(Planet);
+		OnPlanetRemove.Broadcast(Planet);
+	}
+}
+
+void AStarPlayerState::AddShip(AShip* Ship)
+{
+	if (Ship && PlayerShips.Contains(Ship))
+	{
+		PlayerShips.Remove(Ship);
+		OnShipAdd.Broadcast(Ship);
+	}
+}
+
+void AStarPlayerState::RemoveShip(AShip* Ship)
+{
+	if (Ship && PlayerShips.Contains(Ship))
+	{
+		PlayerShips.Remove(Ship);
+		OnShipRemove.Broadcast(Ship);
+	}
 }

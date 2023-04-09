@@ -6,6 +6,10 @@
 #include "Widgets/PlanetUWB.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
+#include "Components/MultiLineEditableText.h"
+#include "Player/StarPlayerController.h"
+#include "SpaceEntities/Planet.h"
 #include "Player/StarPlayerState.h"
 
 void ASpaceHUD::BeginPlay()
@@ -68,8 +72,10 @@ void ASpaceHUD::SetUIState(EUIGameStates UIState)
 			if (UIState == EUIGameStates::Planet)
 			{
 				UPlanetUWB* PlanetWidget = Cast<UPlanetUWB>(GameWidgets[EUIGameStates::Planet]);
-				if (PlayerState && PlanetWidget) {
-
+				if (AStarPlayerController* PlayerController = Cast<AStarPlayerController>(GetOwningPlayerController()); 
+					PlanetWidget && PlayerController->CurrentPlanet.IsValid())
+				{
+						PlanetWidget->InitializePlanetWidget(PlayerController->CurrentPlanet.Get());
 				}
 			}
 
