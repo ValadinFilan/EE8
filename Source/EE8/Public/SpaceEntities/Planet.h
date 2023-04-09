@@ -17,7 +17,7 @@ struct FPlanetInfo
 
 public:
 
-	//FPlanetInfo(){}
+	FPlanetInfo(){}
 
 	FPlanetInfo(FString l_Name,
 		int32 l_Population,
