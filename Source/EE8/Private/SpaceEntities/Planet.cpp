@@ -2,6 +2,7 @@
 
 
 #include "SpaceEntities/Planet.h"
+#include "..\..\Public\SpaceEntities\Planet.h"
 
 APlanet::APlanet()
 {
@@ -62,4 +63,14 @@ bool APlanet::SetPlanetVisibility(bool Visibility)
 	SetActorEnableCollision(Visibility);
 	SetActorTickEnabled(Visibility);
 	return false;
+}
+
+void APlanet::SetOwningPlayer(AStarPlayerState* PlayerState)
+{
+	OwningPlayerState = PlayerState;
+}
+
+AStarPlayerState* APlanet::GetOwningPlayer()
+{
+	return OwningPlayerState;
 }
