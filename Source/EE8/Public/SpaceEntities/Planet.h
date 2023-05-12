@@ -6,6 +6,8 @@
 #include "SpaceEntities/SpaceObject.h"
 #include "Planet.generated.h"
 
+class AStarPlayerState;
+
 /**
  * 
  */
@@ -81,6 +83,8 @@ protected:
 
 	//UMaterialInstanceDynamic* SetCloudsMaterial();
 
+	AStarPlayerState* OwningPlayerState;
+
 public:
 
 	APlanet();
@@ -94,5 +98,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool SetPlanetVisibility(bool Visibility);
+
+	void SetOwningPlayer(AStarPlayerState* PlayerState);
+
+	AStarPlayerState* GetOwningPlayer();
 
 };
