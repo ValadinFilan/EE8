@@ -12,10 +12,12 @@
 void UPlanetUWB::InitializePlanetWidget(APlanet* Planet)
 {
 	PlanetNameMainTextBox->SetText(FText::FromString(Planet->Info.Name));
-	PlanetDescTextBox->SetText(FText::FromString(Planet->Info.Description));
-	/*PlanetNameTextBox->SetText();
-	PlanetTypeTextBox->SetText();
-	PlanetDescTextBox->SetText();
+	PlanetDescTextBox->SetText(Planet->Info.Description);
+	PlanetNameTextBox->SetText(FText::FromString(Planet->Info.Name));
+	PlanetPopulationTextBox->SetText(FText::AsNumber(Planet->Info.Population));
+	PlanetResourcesMetalTextBox->SetText(FText::AsNumber(Planet->Info.MetalRemaining));
+	PlanetResourcesCarbonTextBox->SetText(FText::AsNumber(Planet->Info.CarbonRemaining));
+	/*
 	PlanetResourcesDescTextBox->SetText();
 	PlanetEffectsDescTextBox->SetText();*/
 }

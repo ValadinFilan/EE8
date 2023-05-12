@@ -20,8 +20,6 @@ class EE8_API UPlanetUWB : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-		UButton* HideButton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UButton* ExitButton;
@@ -33,19 +31,16 @@ public:
 		UTextBlock* PlanetNameTextBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-		UTextBlock* PlanetTypeTextBox;
+		UTextBlock* PlanetPopulationTextBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* PlanetDescTextBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-		UTextBlock* PlanetResourcesTextBox;
+		UTextBlock* PlanetResourcesMetalTextBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-		UTextBlock* PlanetResourcesDescTextBox;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-		UTextBlock* PlanetEffectsTextBox;
+		UTextBlock* PlanetResourcesCarbonTextBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* PlanetEffectsDescTextBox;

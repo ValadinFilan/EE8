@@ -53,6 +53,8 @@ void ASpaceHUD::Initialize()
 				if (StarPlayerState && PlanetWidget)
 				{
 					PlanetWidget->ExitButton->OnClicked.AddDynamic(this, &ASpaceHUD::HideCurrentWidget);
+					//PlanetWidget->ExitButton->OnClicked.AddDynamic(Cast<AStarPlayerController>(GetOwningPlayerController()), &AStarPlayerController::DisolveSpaceSnapping());
+					//Cast<AStarPlayerController>(GetOwningPlayerController())->DisolveSpaceSnapping();
 				}
 			}
 		}
@@ -95,5 +97,6 @@ void ASpaceHUD::HideCurrentWidget()
 		{
 			CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
 		}
+		Cast<AStarPlayerController>(GetOwningPlayerController())->DisolveSpaceSnapping();
 	}
 }

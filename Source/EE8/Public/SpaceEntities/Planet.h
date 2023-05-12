@@ -13,13 +13,9 @@
 USTRUCT(BlueprintType)
 struct FPlanetInfo
 {
-	GENERATED_BODY()
+	//FPlanetInfo(){}
 
-public:
-
-	FPlanetInfo(){}
-
-	FPlanetInfo(FString l_Name,
+	/*FPlanetInfo(FString l_Name,
 		int32 l_Population,
 		FString l_Type,
 		FString l_Description,
@@ -29,33 +25,43 @@ public:
 	{
 		Name = l_Name;
 		Population = l_Population;
-		Type = l_Type = l_Description;
+		Type = l_Type;
 		Description = l_Description;
 		EnergyIncome = l_EnergyIncome;
 		MetalIncome = l_MetalIncome;
 		CarbonIncome = l_CarbonIncome;
-	}
+	}*/
+	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 Population;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FString Type;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FText ShortDesc;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FString Description;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float EnergyIncome;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float MetalIncome;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CarbonIncome;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 SlotsNum;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 MetalRemaining;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 CarbonRemaining;
 };
 
 UCLASS()
@@ -80,13 +86,7 @@ public:
 	APlanet();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FPlanetInfo Info = FPlanetInfo(FString("Emanon"),
-			1000,
-			FString("Terrestrial"),
-			FString("Blah-blah-blah..."),
-			1.0,
-			1.0,
-			1.0);
+	FPlanetInfo Info;
 
 	void Initialize(int32 CosmeticSeed);
 
