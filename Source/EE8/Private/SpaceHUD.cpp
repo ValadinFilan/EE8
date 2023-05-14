@@ -4,6 +4,7 @@
 #include "SpaceHUD.h"
 #include "Widgets/MainMenuUWB.h"
 #include "Widgets/PlanetUWB.h"
+#include "Widgets/SystemOverviewUWB.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
@@ -53,12 +54,23 @@ void ASpaceHUD::Initialize()
 				if (StarPlayerState && PlanetWidget)
 				{
 					PlanetWidget->ExitButton->OnClicked.AddDynamic(this, &ASpaceHUD::HideCurrentWidget);
+				}
+			}
+			//Bind and configure widget
+			else if (GameWidgetClassPair.Key == EUIGameStates::SystemOverview)
+			{
+				USystemOverviewUWB* SystemOverviewWidget = Cast<USystemOverviewUWB>(Widget);
+				if (StarPlayerState && SystemOverviewWidget)
+				{
+					SystemOverviewWidget->InitializeSystemOverviewWidget(StarPlayerState);
+					///PlanetWidget->ExitButton->OnClicked.AddDynamic(this, &ASpaceHUD::HideCurrentWidget);
 					//PlanetWidget->ExitButton->OnClicked.AddDynamic(Cast<AStarPlayerController>(GetOwningPlayerController()), &AStarPlayerController::DisolveSpaceSnapping());
 					//Cast<AStarPlayerController>(GetOwningPlayerController())->DisolveSpaceSnapping();
 				}
 			}
 		}
 	}
+	SetUIState(EUIGameStates::SystemOverview);
 }
 
 void ASpaceHUD::SetUIState(EUIGameStates UIState)
@@ -68,6 +80,7 @@ void ASpaceHUD::SetUIState(EUIGameStates UIState)
 		UUserWidget* ActiveWidget = GameWidgets[UIState];
 		if (ActiveWidget)
 		{
+			GameWidgets[CurentUIGameState]->SetVisibility(ESlateVisibility::Hidden);
 			AStarPlayerState* PlayerState = GetOwningPlayerController()->GetPlayerState<AStarPlayerState>();
 
 			//Prepare widget
@@ -77,8 +90,15 @@ void ASpaceHUD::SetUIState(EUIGameStates UIState)
 				if (AStarPlayerController* PlayerController = Cast<AStarPlayerController>(GetOwningPlayerController()); 
 					PlanetWidget && PlayerController->CurrentPlanet.IsValid())
 				{
-						PlanetWidget->InitializePlanetWidget(PlayerController->CurrentPlanet.Get());
+					PlanetWidget->InitializePlanetWidget(PlayerController->CurrentPlanet.Get());
 				}
+				CurentUIGameState = EUIGameStates::Planet;
+			}
+
+			if (UIState == EUIGameStates::SystemOverview)
+			{
+				USystemOverviewUWB* SystemOverviewWidget = Cast<USystemOverviewUWB>(GameWidgets[EUIGameStates::SystemOverview]);
+				CurentUIGameState = EUIGameStates::SystemOverview;
 			}
 
 			//Enable widget

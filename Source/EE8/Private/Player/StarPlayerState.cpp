@@ -6,6 +6,14 @@
 
 void AStarPlayerState::BeginPlay()
 {
+	Metal = 1000;
+	Energy = 1000;
+	Carbon = 0;
+
+	MetalIncome = 0.0f;
+	EnergyIncome = 0.0f;
+	CarbonIncome = 0.0f;
+
 	AShip* Ship = GetWorld()->SpawnActor<AShip>(SpawningShipClass);
 	Ship->Initialize(this);
 	PlayerShips.Add(Ship);

@@ -2,6 +2,11 @@
 
 
 #include "SpaceEntities/Planet.h"
+#include "SpaceEntities/Buildings/ExtractBuilding.h"
+#include "SpaceEntities/Buildings/DefenceBuilding.h"
+#include "SpaceEntities/Buildings/ManagementBuilding.h"
+#include "SpaceEntities/Buildings/ShipyardBuilding.h"
+#include "Player/StarPlayerState.h"
 #include "..\..\Public\SpaceEntities\Planet.h"
 
 APlanet::APlanet()
@@ -73,4 +78,48 @@ void APlanet::SetOwningPlayer(AStarPlayerState* PlayerState)
 AStarPlayerState* APlanet::GetOwningPlayer()
 {
 	return OwningPlayerState;
+}
+
+void APlanet::CreateBuilding(EBuildingType Type)
+{
+	FBuildingInfo NewBuildingInfo;
+	if (Info.SlotsNum > Buildings.Num()) return;
+	switch (Type)
+	{
+	case EBuildingType::Extract:
+		{
+		UExtractBuilding* NewExtractBuilding;
+		NewExtractBuilding = NewObject<UExtractBuilding>();
+		OwningPlayerState->AddMetalIncome(NewExtractBuilding->BaseProduction);
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewExtractBuilding), EBuildingType::Extract);
+		Buildings.Add(NewBuildingInfo);
+		break;
+		}
+	case EBuildingType::Shipyard:
+		{
+		UShipyardBuilding* NewShipyardBuilding;
+		NewShipyardBuilding = NewObject<UShipyardBuilding>();
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewShipyardBuilding), EBuildingType::Extract);
+		Buildings.Add(NewBuildingInfo);
+		break;
+		}
+	case EBuildingType::Defence:
+		{
+		UDefenceBuilding* NewDefenceBuilding;
+		NewDefenceBuilding = NewObject<UDefenceBuilding>();
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewDefenceBuilding), EBuildingType::Extract);
+		Buildings.Add(NewBuildingInfo);
+		break;
+		}
+	case EBuildingType::Management:
+		{
+		UManagementBuilding* NewManagementBuilding;
+		NewManagementBuilding = NewObject<UManagementBuilding>();
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewManagementBuilding), EBuildingType::Extract);
+		Buildings.Add(NewBuildingInfo);
+		break;
+		}
+	default:
+		break;
+	}
 }

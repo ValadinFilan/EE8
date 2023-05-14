@@ -160,7 +160,7 @@ void ASpaceManager::DrawConnectionWithStars()
 			End,
 			DrawColor,
 			0.0, // for infinity period draw
-			0.0,
+			0.0,//1.5
 			4
 		);//можно переписать LineBatcher и сделать чтоб оно не дрожало!!!!
 		lines.Add(line);

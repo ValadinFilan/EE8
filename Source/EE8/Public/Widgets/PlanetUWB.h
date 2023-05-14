@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/UniformGridPanel.h"
 #include "PlanetUWB.generated.h"
 
-class ASpaceHUD;
 class UButton;
 class UTextBlock;
 class APlanet;
+class UBuildingIconUWB;
 
 /**
  * 
@@ -20,6 +21,13 @@ class EE8_API UPlanetUWB : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<UBuildingIconUWB> BuildingIconClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UUniformGridPanel* BuildingTable;
+
+	TArray<UBuildingIconUWB*> BuildingIconWidgets;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UButton* ExitButton;
@@ -32,6 +40,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* PlanetPopulationTextBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* PlanetSlotNum;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* PlanetDescTextBox;

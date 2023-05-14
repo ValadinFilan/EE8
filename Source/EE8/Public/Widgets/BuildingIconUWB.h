@@ -8,6 +8,10 @@
 
 class ASpaceHUD;
 class UButton;
+class UImage;
+
+class UBuilding;
+enum class EBuildingType : uint8;
 
 /**
  * 
@@ -19,7 +23,27 @@ class EE8_API UBuildingIconUWB : public UUserWidget
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UImage* Image;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UButton* IconButton;
 
-	void InitializeIconWidget(ASpaceHUD* HUD);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* EmptySlotIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* ExtractIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* ShipyardIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* DefenceIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* ManagementIcon;
+
+	void InitializeIconWidget(UBuilding* BuildingPointer, EBuildingType Type);
+
+	void InitializeIconWidget();
 };

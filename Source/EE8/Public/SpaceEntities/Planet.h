@@ -7,6 +7,8 @@
 #include "Planet.generated.h"
 
 class AStarPlayerState;
+class UBuilding;
+enum class EBuildingType : uint8;
 
 /**
  * 
@@ -17,22 +19,6 @@ struct FPlanetInfo
 {
 	//FPlanetInfo(){}
 
-	/*FPlanetInfo(FString l_Name,
-		int32 l_Population,
-		FString l_Type,
-		FString l_Description,
-		float l_EnergyIncome,
-		float l_MetalIncome,
-		float l_CarbonIncome)
-	{
-		Name = l_Name;
-		Population = l_Population;
-		Type = l_Type;
-		Description = l_Description;
-		EnergyIncome = l_EnergyIncome;
-		MetalIncome = l_MetalIncome;
-		CarbonIncome = l_CarbonIncome;
-	}*/
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -66,6 +52,27 @@ struct FPlanetInfo
 		int32 CarbonRemaining;
 };
 
+USTRUCT(BlueprintType)
+struct FBuildingInfo
+{
+	GENERATED_BODY()
+
+	FBuildingInfo(){}
+
+	FBuildingInfo(UBuilding* IBuilding, EBuildingType IType)
+	{
+		Building = IBuilding;
+		Type = IType;
+	}
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UBuilding* Building;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EBuildingType Type;
+};
+
 UCLASS()
 class EE8_API APlanet : public ASpaceObject
 {
@@ -79,7 +86,6 @@ protected:
 	UStaticMeshComponent* CloudSphere;
 
 	//UMaterialInstanceDynamic* CloudsDynamicMaterial;
-
 
 	//UMaterialInstanceDynamic* SetCloudsMaterial();
 
@@ -103,4 +109,7 @@ public:
 
 	AStarPlayerState* GetOwningPlayer();
 
+	TArray<FBuildingInfo> Buildings;
+
+	void CreateBuilding(EBuildingType Type);
 };

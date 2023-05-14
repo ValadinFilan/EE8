@@ -14,9 +14,9 @@ enum class EBuildingType : uint8
 	Extract,
 	Shipyard,
 	Defence,
-	Management
+	Management,
+	Empty
 };
-
 
 USTRUCT(BlueprintType)
 struct FBuildingLevel
