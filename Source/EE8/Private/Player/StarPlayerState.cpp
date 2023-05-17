@@ -45,6 +45,7 @@ void AStarPlayerState::AddCapturedPlanet(APlanet* Planet)
 	if (Planet && !PlayerPlanets.Contains(Planet))
 	{
 		PlayerPlanets.Add(Planet);
+		Planet->SetOwningPlayer(this);
 		OnPlanetAdd.Broadcast(Planet);
 	}
 }

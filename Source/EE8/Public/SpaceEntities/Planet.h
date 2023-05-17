@@ -10,6 +10,8 @@ class AStarPlayerState;
 class UBuilding;
 enum class EBuildingType : uint8;
 
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FBuildingCreate, UBuilding* BuildingPointer, EBuildingType BuildingType, bool ChangeGameState);
+
 /**
  * 
  */
@@ -111,5 +113,8 @@ public:
 
 	TArray<FBuildingInfo> Buildings;
 
-	void CreateBuilding(EBuildingType Type);
+	FBuildingCreate OnCreateBuilding;
+
+	UFUNCTION()
+	UBuilding* CreateBuilding(EBuildingType Type);
 };

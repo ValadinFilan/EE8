@@ -13,5 +13,6 @@ UCLASS()
 class EE8_API UDefenceBuilding : public UBuilding
 {
 	GENERATED_BODY()
-	
+public:
+	virtual void Initialize(APlanet* Planet) override;
 };

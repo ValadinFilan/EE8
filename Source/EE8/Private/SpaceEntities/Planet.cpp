@@ -80,46 +80,49 @@ AStarPlayerState* APlanet::GetOwningPlayer()
 	return OwningPlayerState;
 }
 
-void APlanet::CreateBuilding(EBuildingType Type)
+UBuilding* APlanet::CreateBuilding(EBuildingType Type)
 {
 	FBuildingInfo NewBuildingInfo;
-	if (Info.SlotsNum > Buildings.Num()) return;
+	if (Info.SlotsNum < Buildings.Num()) return nullptr;
 	switch (Type)
 	{
 	case EBuildingType::Extract:
 		{
 		UExtractBuilding* NewExtractBuilding;
 		NewExtractBuilding = NewObject<UExtractBuilding>();
+		NewExtractBuilding->Initialize(this);
 		OwningPlayerState->AddMetalIncome(NewExtractBuilding->BaseProduction);
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewExtractBuilding), EBuildingType::Extract);
-		Buildings.Add(NewBuildingInfo);
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewExtractBuilding), Type);
 		break;
 		}
 	case EBuildingType::Shipyard:
 		{
 		UShipyardBuilding* NewShipyardBuilding;
 		NewShipyardBuilding = NewObject<UShipyardBuilding>();
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewShipyardBuilding), EBuildingType::Extract);
-		Buildings.Add(NewBuildingInfo);
+		NewShipyardBuilding->Initialize(this);
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewShipyardBuilding), Type);
 		break;
 		}
 	case EBuildingType::Defence:
 		{
 		UDefenceBuilding* NewDefenceBuilding;
 		NewDefenceBuilding = NewObject<UDefenceBuilding>();
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewDefenceBuilding), EBuildingType::Extract);
-		Buildings.Add(NewBuildingInfo);
+		NewDefenceBuilding->Initialize(this);
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewDefenceBuilding), Type);
 		break;
 		}
 	case EBuildingType::Management:
 		{
 		UManagementBuilding* NewManagementBuilding;
 		NewManagementBuilding = NewObject<UManagementBuilding>();
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewManagementBuilding), EBuildingType::Extract);
-		Buildings.Add(NewBuildingInfo);
+		NewManagementBuilding->Initialize(this);
+		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewManagementBuilding), Type);
 		break;
 		}
 	default:
 		break;
 	}
+	Buildings.Add(NewBuildingInfo);
+	OnCreateBuilding.Broadcast(NewBuildingInfo.Building, NewBuildingInfo.Type, true);
+	return NewBuildingInfo.Building;
 }

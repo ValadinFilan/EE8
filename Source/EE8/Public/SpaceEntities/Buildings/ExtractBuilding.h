@@ -21,4 +21,6 @@ public:
 	float BaseProduction = 10.f;
 
 	virtual void Update() override;
+
+	virtual void Initialize(APlanet* Planet) override;
 };

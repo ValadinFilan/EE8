@@ -12,8 +12,14 @@
 
 #include "Components/Button.h"
 
-void UPlanetUWB::InitializePlanetWidget(APlanet* Planet)
+APlanet* UPlanetUWB::GetPlanet()
 {
+	return Planet;
+}
+
+void UPlanetUWB::InitializePlanetWidget(APlanet* TargetPlanet)
+{
+	Planet = TargetPlanet;
 	PlanetNameMainTextBox->SetText(FText::FromString(Planet->Info.Name));
 	PlanetDescTextBox->SetText(Planet->Info.Description);
 	PlanetNameTextBox->SetText(FText::FromString(Planet->Info.Name));
@@ -47,7 +53,7 @@ void UPlanetUWB::InitializePlanetWidget(APlanet* Planet)
 			//BuildingIconWidget->InitializeLevelWidget(HUD, i);
 			//Planet->Buildings[i].
 			if (i < Planet->Buildings.Num()) {
-				BuildingIconWidget->InitializeIconWidget(Planet->Buildings[i].Building, Planet->Buildings[i].Type);
+				BuildingIconWidget->InitializeIconWidget(Planet->Buildings[i].Building, Planet->Buildings[i].Type, false);
 			}
 			else BuildingIconWidget->InitializeIconWidget();
 			BuildingIconWidgets.Add(BuildingIconWidget);
@@ -56,4 +62,9 @@ void UPlanetUWB::InitializePlanetWidget(APlanet* Planet)
 	/*
 	PlanetResourcesDescTextBox->SetText();
 	PlanetEffectsDescTextBox->SetText();*/
+}
+
+void UPlanetUWB::UnhideBuildingTable()
+{
+	BuildingTable->SetVisibility(ESlateVisibility::Visible);
 }

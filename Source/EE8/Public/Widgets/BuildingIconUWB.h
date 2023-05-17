@@ -7,11 +7,14 @@
 #include "BuildingIconUWB.generated.h"
 
 class ASpaceHUD;
+enum class EUIGameStates : uint8;
 class UButton;
 class UImage;
 
 class UBuilding;
 enum class EBuildingType : uint8;
+
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FBuildingState, EUIGameStates, UBuilding*, UBuildingIconUWB*);
 
 /**
  * 
@@ -20,6 +23,12 @@ UCLASS()
 class EE8_API UBuildingIconUWB : public UUserWidget
 {
 	GENERATED_BODY()
+
+private:
+
+	UBuilding* Building;
+
+	EBuildingType Type;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -43,7 +52,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTexture2D* ManagementIcon;
 
-	void InitializeIconWidget(UBuilding* BuildingPointer, EBuildingType Type);
+	FBuildingState OnButtonClicked;
+
+	void InitializeIconWidget(UBuilding* BuildingPointer, EBuildingType BuildingType, bool ChangeGameState);
 
 	void InitializeIconWidget();
+
+	UFUNCTION()
+	void OpenUIBuildingTab();
 };

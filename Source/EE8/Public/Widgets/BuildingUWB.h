@@ -3,15 +3,41 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidgetBlueprint.h"
+#include "Blueprint/UserWidget.h"
 #include "BuildingUWB.generated.h"
+
+class UButton;
+class UBuilding;
+class UTextBlock;
 
 /**
  * 
  */
 UCLASS()
-class EE8_API UBuildingUWB : public UUserWidgetBlueprint
+class EE8_API UBuildingUWB : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UButton* ExitButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UButton* UpgradeButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* BuildingNameMainTextBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* BuildingNameTextBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* BuildingShortDescTextBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* BuildingDescriptionTextBox;
+
+	void InitializeBuildingWidget();
+
+	void InitializeBuildingWidget(UBuilding* Building);
 };

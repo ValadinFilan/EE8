@@ -2,6 +2,7 @@
 
 
 #include "Widgets/BuildingIconUWB.h"
+#include "SpaceHUD.h"
 #include "Components/TextWidgetTypes.h"
 #include "Components/Button.h"
 #include "Engine/Texture2D.h"
@@ -14,8 +15,13 @@
 
 #include "..\..\Public\Widgets\BuildingIconUWB.h"
 
-void UBuildingIconUWB::InitializeIconWidget(UBuilding* BuildingPointer, EBuildingType Type)
+void UBuildingIconUWB::InitializeIconWidget(UBuilding* BuildingPointer, EBuildingType BuildingType, bool ChangeGameState)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("YYY"));
+	Building = BuildingPointer;
+	Type = BuildingType;
+	IconButton->OnClicked.AddUniqueDynamic(this, &UBuildingIconUWB::OpenUIBuildingTab);
+
 	switch (Type)
 	{
 	case EBuildingType::Extract:
@@ -42,9 +48,26 @@ void UBuildingIconUWB::InitializeIconWidget(UBuilding* BuildingPointer, EBuildin
 		if (EmptySlotIcon) Image->SetBrushFromTexture(EmptySlotIcon);
 		break;
 	}
+	if (ChangeGameState) OpenUIBuildingTab();
 }
 
 void UBuildingIconUWB::InitializeIconWidget()
 {
+	Building = nullptr;
+	IconButton->OnClicked.AddUniqueDynamic(this, &UBuildingIconUWB::OpenUIBuildingTab);
 	if (EmptySlotIcon) Image->SetBrushFromTexture(EmptySlotIcon);
+}
+
+void UBuildingIconUWB::OpenUIBuildingTab()
+{
+	if (!Building)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("if"));
+		OnButtonClicked.Broadcast(EUIGameStates::CreateBuilding, nullptr, this);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("else"));
+		OnButtonClicked.Broadcast(EUIGameStates::Building, Building, this);
+	}
 }

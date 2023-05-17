@@ -20,6 +20,8 @@ class EE8_API UPlanetUWB : public UUserWidget
 {
 	GENERATED_BODY()
 
+	APlanet* Planet;
+
 public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UBuildingIconUWB> BuildingIconClass;
@@ -56,5 +58,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* PlanetEffectsDescTextBox;
 
-	void InitializePlanetWidget(APlanet* Planet);
+	APlanet* GetPlanet();
+
+	void InitializePlanetWidget(APlanet* TargetPlanet);
+
+	UFUNCTION()
+	void UnhideBuildingTable();
 };

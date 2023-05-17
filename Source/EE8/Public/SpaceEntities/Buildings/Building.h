@@ -24,8 +24,15 @@ struct FBuildingLevel
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintReadWrite)
-	UTexture2D* LevelImage;
+	//UPROPERTY(BlueprintReadWrite)
+	//UTexture2D* LevelImage;
+	FBuildingLevel(){}
+
+	FBuildingLevel(float Buff, FName Name)
+	{
+		LevelBuff = Buff;
+		BuildingName = Name;
+	}
 
 	UPROPERTY(BlueprintReadWrite)
 	float LevelBuff;

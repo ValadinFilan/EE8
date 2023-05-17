@@ -9,12 +9,16 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FUIChangeState, EUIGameStates);
 
+class UBuilding;
+class UBuildingIconUWB;
+
 /*Enum for states of UI*/
 UENUM(BlueprintType)
 enum class EUIGameStates : uint8 {
 	MainMenu,
 	Planet,
 	Building,
+	CreateBuilding,
 	Spaceship,
 	SystemOverview
 };
@@ -42,6 +46,12 @@ public:
 	void Initialize();
 
 	void SetUIState(EUIGameStates UIState);
+
+	UFUNCTION()
+	void SetUIState(EUIGameStates UIState, UBuilding* Building, UBuildingIconUWB* BuildingIconWidget);
+
+	UFUNCTION()
+	void SetUIStatePlanet();
 
 	UFUNCTION()
 	void HideCurrentWidget();
