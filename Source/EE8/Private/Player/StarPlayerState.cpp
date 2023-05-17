@@ -4,11 +4,17 @@
 #include "Player/StarPlayerState.h"
 #include "..\..\Public\Player\StarPlayerState.h"
 
+AStarPlayerState::AStarPlayerState()
+{
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickInterval = 2.0f;
+}
+
 void AStarPlayerState::BeginPlay()
 {
-	Metal = 1000;
-	Energy = 1000;
-	Carbon = 0;
+	Metal = 1000.0f;
+	Energy = 1000.0f;
+	Carbon = 0.0f;
 
 	MetalIncome = 0.0f;
 	EnergyIncome = 0.0f;
@@ -17,6 +23,19 @@ void AStarPlayerState::BeginPlay()
 	AShip* Ship = GetWorld()->SpawnActor<AShip>(SpawningShipClass);
 	Ship->Initialize(this);
 	PlayerShips.Add(Ship);
+
+}
+
+void AStarPlayerState::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(DeltaTime));
+	Metal += MetalIncome;
+	OnMetalUpdate.Broadcast(Metal);
+	Energy += EnergyIncome;
+	OnEnergyUpdate.Broadcast(Energy);
+	Carbon += CarbonIncome;
+	OnCarbonUpdate.Broadcast(Carbon);
 }
 
 void AStarPlayerState::AddEnergyIncome(float Increment)
@@ -49,6 +68,12 @@ void AStarPlayerState::AddCapturedPlanet(APlanet* Planet)
 		OnPlanetAdd.Broadcast(Planet);
 	}
 }
+
+void AStarPlayerState::RenewCapturedPlanet(APlanet* Planet)
+{
+	OnPlanetRenew.Broadcast(Planet);
+}
+
 
 void AStarPlayerState::RemoveCapturedPlanet(APlanet* Planet)
 {

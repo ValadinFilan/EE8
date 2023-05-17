@@ -91,7 +91,7 @@ void ASpaceHUD::Initialize()
 				UCreateBuildingUWB* CreateBuildingWidget = Cast<UCreateBuildingUWB>(Widget);
 				if (StarPlayerState && CreateBuildingWidget)
 				{
-					CreateBuildingWidget->ExitButton->OnClicked.AddUniqueDynamic(this, &ASpaceHUD::HideCurrentWidget);
+					CreateBuildingWidget->ExitButton->OnClicked.AddUniqueDynamic(this, &ASpaceHUD::SetUIStatePlanet);
 					CreateBuildingWidget->ExitButton->OnClicked.AddUniqueDynamic(Cast<UPlanetUWB>(GameWidgets[EUIGameStates::Planet]), &UPlanetUWB::UnhideBuildingTable);
 				}
 			}

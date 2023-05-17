@@ -15,7 +15,8 @@ void UExtractBuilding::Update()
 void UExtractBuilding::Initialize(APlanet* Planet)
 {
 	Super::Initialize(Planet);
-	BuildingLevels.Add(FBuildingLevel(10.0f, FName("e1")));
-	BuildingLevels.Add(FBuildingLevel(20.0f, FName("e2")));
-	BuildingLevels.Add(FBuildingLevel(40.0f, FName("e3")));
+
+	BuildingLevels.Add(FBuildingLevel(600, 10.0f, FName("e1")));
+	BuildingLevels.Add(FBuildingLevel(1200, 20.0f, FName("e2")));
+	BuildingLevels.Add(FBuildingLevel(2400, 40.0f, FName("e3")));
 }

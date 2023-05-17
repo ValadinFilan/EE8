@@ -54,27 +54,6 @@ struct FPlanetInfo
 		int32 CarbonRemaining;
 };
 
-USTRUCT(BlueprintType)
-struct FBuildingInfo
-{
-	GENERATED_BODY()
-
-	FBuildingInfo(){}
-
-	FBuildingInfo(UBuilding* IBuilding, EBuildingType IType)
-	{
-		Building = IBuilding;
-		Type = IType;
-	}
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UBuilding* Building;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EBuildingType Type;
-};
-
 UCLASS()
 class EE8_API APlanet : public ASpaceObject
 {
@@ -111,10 +90,13 @@ public:
 
 	AStarPlayerState* GetOwningPlayer();
 
-	TArray<FBuildingInfo> Buildings;
+	TArray<UBuilding*> Buildings;
 
 	FBuildingCreate OnCreateBuilding;
 
 	UFUNCTION()
 	UBuilding* CreateBuilding(EBuildingType Type);
+
+	UFUNCTION()
+	UBuilding* UpgradeBuilding(UBuilding* Building);
 };

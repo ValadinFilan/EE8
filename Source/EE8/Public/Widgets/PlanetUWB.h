@@ -10,6 +10,7 @@
 class UButton;
 class UTextBlock;
 class APlanet;
+class UBuilding;
 class UBuildingIconUWB;
 
 /**

@@ -8,6 +8,7 @@
 
 class UButton;
 class UBuilding;
+class APlanet;
 class UTextBlock;
 
 /**
@@ -32,12 +33,23 @@ public:
 		UTextBlock* BuildingNameTextBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* BuildingLevelTextBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* BuildingShortDescTextBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* BuildingDescriptionTextBox;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* UpgradeCostTextBox;
+
+	UBuilding* Building;
+
 	void InitializeBuildingWidget();
 
-	void InitializeBuildingWidget(UBuilding* Building);
+	void InitializeBuildingWidget(UBuilding* TargetBuilding);
+
+	UFUNCTION()
+	void BuildingWidgetUpgrade();
 };

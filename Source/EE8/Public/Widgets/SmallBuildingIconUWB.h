@@ -4,38 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "BuildingIconUWB.generated.h"
+#include "SmallBuildingIconUWB.generated.h"
 
-class ASpaceHUD;
-enum class EUIGameStates : uint8;
-class UButton;
 class UImage;
-
 class UBuilding;
-enum class EBuildingType : uint8;
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FBuildingState, EUIGameStates, UBuilding*, UBuildingIconUWB*);
 
 /**
  * 
  */
 UCLASS()
-class EE8_API UBuildingIconUWB : public UUserWidget
+class EE8_API USmallBuildingIconUWB : public UUserWidget
 {
 	GENERATED_BODY()
 
-private:
-
-	UBuilding* Building;
-
-	EBuildingType Type;
-
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-		UImage* Image;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-		UButton* IconButton;
+		UImage* TypeImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UImage* LevelImage;
+
+	//Type
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTexture2D* EmptySlotIcon;
@@ -52,12 +43,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTexture2D* ManagementIcon;
 
-	FBuildingState OnButtonClicked;
+	//Level
 
-	void InitializeIconWidget(UBuilding* BuildingPointer, bool ChangeGameState);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* Lv1Icon;
 
-	void InitializeIconWidget();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* Lv2Icon;
 
-	UFUNCTION()
-	void OpenUIBuildingTab();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UTexture2D* Lv3Icon;
+
+	void InitializeSmallBuildingIconWidget(UBuilding* Building);
 };

@@ -15,11 +15,11 @@
 
 #include "..\..\Public\Widgets\BuildingIconUWB.h"
 
-void UBuildingIconUWB::InitializeIconWidget(UBuilding* BuildingPointer, EBuildingType BuildingType, bool ChangeGameState)
+void UBuildingIconUWB::InitializeIconWidget(UBuilding* BuildingPointer, bool ChangeGameState)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("YYY"));
 	Building = BuildingPointer;
-	Type = BuildingType;
+	Type = BuildingPointer->GetBuildingType();
 	IconButton->OnClicked.AddUniqueDynamic(this, &UBuildingIconUWB::OpenUIBuildingTab);
 
 	switch (Type)

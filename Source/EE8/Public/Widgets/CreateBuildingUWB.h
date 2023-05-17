@@ -9,6 +9,8 @@
 
 class APlanet;
 class UButton;
+class UTextBlock;
+class AStarPlayerState;
 //enum class EBuildingType : uint8;
 
 class UBuildingIconUWB;
@@ -37,6 +39,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UButton* BManagementButton;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* Metal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* Energy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UTextBlock* Carbon;
+
 	APlanet* Planet;
 
 	UBuildingIconUWB* BuildingIconWidget;
@@ -54,4 +65,13 @@ public:
 
 	UFUNCTION()
 		void CreateManagementBuilding();
+
+	UFUNCTION()
+		void UpdateMetal(float NewMetal);
+
+	UFUNCTION()
+		void UpdateEnergy(float NewEnergy);
+
+	UFUNCTION()
+		void UpdateCarbon(float NewCarbon);
 };

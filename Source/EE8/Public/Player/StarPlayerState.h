@@ -11,7 +11,11 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FEnergyIncomeUpdate, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMetalIncomeUpdate, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FCarbonIncomeUpdate, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FEnergyUpdate, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMetalUpdate, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FCarbonUpdate, float);
 DECLARE_MULTICAST_DELEGATE_OneParam(FPlanetAdd, APlanet*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FPlanetRenew, APlanet*);
 DECLARE_MULTICAST_DELEGATE_OneParam(FPlanetRemove, APlanet*);
 DECLARE_MULTICAST_DELEGATE_OneParam(FShipAdd, AShip*);
 DECLARE_MULTICAST_DELEGATE_OneParam(FShipRemove, AShip*);
@@ -26,13 +30,13 @@ class EE8_API AStarPlayerState : public APlayerState
 	
 public:
 	UPROPERTY(VisibleAnywhere)
-	int64 Energy;
+	float Energy;
 
 	UPROPERTY(VisibleAnywhere)
-	int64 Metal;
+	float Metal;
 
 	UPROPERTY(VisibleAnywhere)
-	int64 Carbon;
+	float Carbon;
 
 	UPROPERTY(VisibleAnywhere)
 	float EnergyIncome;
@@ -58,10 +62,16 @@ public:
 	FEnergyIncomeUpdate OnEnergyIncomeUpdate;
 	FMetalIncomeUpdate OnMetalIncomeUpdate;
 	FCarbonIncomeUpdate OnCarbonIncomeUpdate;
+	FEnergyUpdate OnEnergyUpdate;
+	FMetalUpdate OnMetalUpdate;
+	FCarbonUpdate OnCarbonUpdate;
 	FPlanetAdd OnPlanetAdd;
+	FPlanetRenew OnPlanetRenew;
 	FPlanetRemove OnPlanetRemove;
 	FShipAdd OnShipAdd;
 	FShipRemove OnShipRemove;
+
+	AStarPlayerState();
 
 	void AddEnergyIncome(float Increment);
 
@@ -71,6 +81,8 @@ public:
 
 	void AddCapturedPlanet(APlanet* Planet);
 
+	void RenewCapturedPlanet(APlanet* Planet);
+
 	void RemoveCapturedPlanet(APlanet* Planet);
 
 	void AddShip(AShip* Ship);
@@ -79,4 +91,5 @@ public:
 	
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
 };

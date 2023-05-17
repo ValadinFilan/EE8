@@ -50,6 +50,15 @@ public:
 	void InitializeSystemOverviewWidget(AStarPlayerState* StarPlayerState);
 
 	UFUNCTION()
+	void UpdateMetal(float NewMetal);
+
+	UFUNCTION()
+	void UpdateEnergy(float NewEnergy);
+
+	UFUNCTION()
+	void UpdateCarbon(float NewCarbon);
+
+	UFUNCTION()
 	void UpdateMetalIncome(float Increment);
 
 	UFUNCTION()
@@ -60,5 +69,7 @@ public:
 
 	UFUNCTION()
 	void AddCapturedPlanet(APlanet* Planet);
+
+	void RenewPlanetData(APlanet* Planet);
 
 };

@@ -28,11 +28,15 @@ public:
 	//UTexture2D* LevelImage;
 	FBuildingLevel(){}
 
-	FBuildingLevel(float Buff, FName Name)
+	FBuildingLevel(float Cost, float Buff, FName Name)
 	{
+		UpgpadeCost = Cost;
 		LevelBuff = Buff;
 		BuildingName = Name;
 	}
+
+	UPROPERTY(BlueprintReadWrite)
+	float UpgpadeCost;
 
 	UPROPERTY(BlueprintReadWrite)
 	float LevelBuff;
@@ -67,6 +71,7 @@ public:
 
 	virtual void Update();
 
+	UFUNCTION()
 	virtual void UpgrageLevel();
 
 	UFUNCTION(BlueprintCallable)

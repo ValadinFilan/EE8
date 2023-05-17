@@ -66,7 +66,8 @@ void AStarPlayerController::DisolveSpaceSnapping()
 		GetPawn()->SetActorLocation(ViewTargetCamera->GetComponentLocation());
 		GetPawn()->SetActorRotation(ViewTargetCamera->GetComponentRotation());
 	}
-
+	AStarPlayerState* StarPlayerState = GetPlayerState<AStarPlayerState>();
+	StarPlayerState->RenewCapturedPlanet(Cast<APlanet>(CurrentPlanet));
 	SetViewTargetWithBlend(this, 0.7f);
 }
 

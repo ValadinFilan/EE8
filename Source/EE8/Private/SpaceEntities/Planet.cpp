@@ -82,47 +82,70 @@ AStarPlayerState* APlanet::GetOwningPlayer()
 
 UBuilding* APlanet::CreateBuilding(EBuildingType Type)
 {
-	FBuildingInfo NewBuildingInfo;
+	UBuilding* NewBuilding;
 	if (Info.SlotsNum < Buildings.Num()) return nullptr;
 	switch (Type)
 	{
 	case EBuildingType::Extract:
 		{
+		if (OwningPlayerState->Metal < 300) return nullptr;//UExtractBuilding cost
+		OwningPlayerState->Metal -= 300;
 		UExtractBuilding* NewExtractBuilding;
 		NewExtractBuilding = NewObject<UExtractBuilding>();
 		NewExtractBuilding->Initialize(this);
 		OwningPlayerState->AddMetalIncome(NewExtractBuilding->BaseProduction);
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewExtractBuilding), Type);
+		NewBuilding = Cast<UBuilding>(NewExtractBuilding);
 		break;
 		}
 	case EBuildingType::Shipyard:
 		{
+		if (OwningPlayerState->Metal < 300) return nullptr;//UShipyardBuilding cost
+		OwningPlayerState->Metal -= 300;
 		UShipyardBuilding* NewShipyardBuilding;
 		NewShipyardBuilding = NewObject<UShipyardBuilding>();
 		NewShipyardBuilding->Initialize(this);
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewShipyardBuilding), Type);
+		NewBuilding = Cast<UBuilding>(NewShipyardBuilding);
 		break;
 		}
 	case EBuildingType::Defence:
 		{
+		if (OwningPlayerState->Metal < 300) return nullptr;//UDefenceBuilding cost
+		OwningPlayerState->Metal -= 300;
 		UDefenceBuilding* NewDefenceBuilding;
 		NewDefenceBuilding = NewObject<UDefenceBuilding>();
 		NewDefenceBuilding->Initialize(this);
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewDefenceBuilding), Type);
+		NewBuilding = Cast<UBuilding>(NewDefenceBuilding);
 		break;
 		}
 	case EBuildingType::Management:
 		{
+		if (OwningPlayerState->Metal < 300) return nullptr;//UManagementBuilding cost
+		OwningPlayerState->Metal -= 300;
 		UManagementBuilding* NewManagementBuilding;
 		NewManagementBuilding = NewObject<UManagementBuilding>();
 		NewManagementBuilding->Initialize(this);
-		NewBuildingInfo = FBuildingInfo(Cast<UBuilding>(NewManagementBuilding), Type);
+		NewBuilding = Cast<UBuilding>(NewManagementBuilding);
 		break;
 		}
 	default:
 		break;
 	}
-	Buildings.Add(NewBuildingInfo);
-	OnCreateBuilding.Broadcast(NewBuildingInfo.Building, NewBuildingInfo.Type, true);
-	return NewBuildingInfo.Building;
+	Buildings.Add(NewBuilding);
+	OnCreateBuilding.Broadcast(NewBuilding, NewBuilding->GetBuildingType(), true);
+	return NewBuilding;
+}
+
+UBuilding* APlanet::UpgradeBuilding(UBuilding* Building)
+{
+	if (Buildings.Contains(Building))
+	{
+		float Cost = Building->GetBuildingLevelData().UpgpadeCost;
+
+		if (Building->GetBuildingLevel() == 3 || OwningPlayerState->Metal < Cost) return nullptr;//UBuilding upgrade cost
+		
+		OwningPlayerState->Metal -= Cost;
+		Building->UpgrageLevel();
+
+	}
+	return Building;
 }

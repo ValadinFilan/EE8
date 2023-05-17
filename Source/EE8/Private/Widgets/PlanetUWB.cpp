@@ -6,6 +6,7 @@
 #include "Components/TextBlock.h"
 #include "Blueprint/WidgetTree.h"
 #include "SpaceEntities/Planet.h"
+#include "SpaceEntities/Buildings/Building.h"
 #include "Components/NamedSlot.h"
 #include "Engine/Engine.h"
 //#include "Components/RichTextBlock.h"
@@ -53,7 +54,7 @@ void UPlanetUWB::InitializePlanetWidget(APlanet* TargetPlanet)
 			//BuildingIconWidget->InitializeLevelWidget(HUD, i);
 			//Planet->Buildings[i].
 			if (i < Planet->Buildings.Num()) {
-				BuildingIconWidget->InitializeIconWidget(Planet->Buildings[i].Building, Planet->Buildings[i].Type, false);
+				BuildingIconWidget->InitializeIconWidget(Planet->Buildings[i], false);
 			}
 			else BuildingIconWidget->InitializeIconWidget();
 			BuildingIconWidgets.Add(BuildingIconWidget);
