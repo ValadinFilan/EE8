@@ -4,6 +4,7 @@
 #include "SpaceEntities/Ship.h"
 #include "SpaceEntities/Planet.h"
 #include "Player/StarPlayerState.h"
+#include "Engine/Engine.h"
 
 AShip::AShip() : Super()
 {
@@ -28,9 +29,9 @@ void AShip::Tick(float DeltaSeconds)
 		{
 			const FVector CurentForwardVector = GetActorForwardVector();
 			const FVector TargetForwardVector = Distance.GetSafeNormal();
-			SetActorRotation(FMath::RInterpTo(CurentForwardVector.Rotation(), TargetForwardVector.Rotation(), DeltaSeconds, 0.9).Quaternion());
-		
-			const FVector VelocityVector = GetActorForwardVector() * Velocity * FMath::Abs(FVector::DotProduct(CurentForwardVector, TargetForwardVector));
+			SetActorRotation(FMath::RInterpTo(CurentForwardVector.Rotation(), TargetForwardVector.Rotation(), DeltaSeconds, 1.3).Quaternion());
+
+			const FVector VelocityVector = GetActorForwardVector() * Velocity * FMath::Pow(FMath::Abs(FVector::DotProduct(CurentForwardVector, TargetForwardVector)), 2.5);
 			AddActorWorldOffset(VelocityVector);
 			
 		}

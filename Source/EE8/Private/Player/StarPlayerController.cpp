@@ -79,6 +79,7 @@ void AStarPlayerController::SnapToSpaceObject(ASpaceObject* SpaceObject)
 	{
 		AStarPlayerState* StarPlayerState = GetPlayerState<AStarPlayerState>();
 		StarPlayerState->AddCapturedPlanet(Cast<APlanet>(SpaceObject));
+		CurrentPlanet = Cast<APlanet>(SpaceObject);
 		GetHUD<ASpaceHUD>()->SetUIState(EUIGameStates::Planet);
 	}
 	else

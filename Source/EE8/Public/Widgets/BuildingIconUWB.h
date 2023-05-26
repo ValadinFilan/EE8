@@ -58,6 +58,8 @@ public:
 
 	void InitializeIconWidget();
 
+	void ClearIconWidget();
+
 	UFUNCTION()
 	void OpenUIBuildingTab();
 };

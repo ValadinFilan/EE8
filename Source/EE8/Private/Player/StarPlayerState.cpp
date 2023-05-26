@@ -12,7 +12,7 @@ AStarPlayerState::AStarPlayerState()
 
 void AStarPlayerState::BeginPlay()
 {
-	Metal = 1000.0f;
+	Metal = 5000.0f;
 	Energy = 1000.0f;
 	Carbon = 0.0f;
 

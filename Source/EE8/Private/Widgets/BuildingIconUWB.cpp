@@ -17,11 +17,8 @@
 
 void UBuildingIconUWB::InitializeIconWidget(UBuilding* BuildingPointer, bool ChangeGameState)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("YYY"));
 	Building = BuildingPointer;
 	Type = BuildingPointer->GetBuildingType();
-	IconButton->OnClicked.AddUniqueDynamic(this, &UBuildingIconUWB::OpenUIBuildingTab);
-
 	switch (Type)
 	{
 	case EBuildingType::Extract:
@@ -53,8 +50,13 @@ void UBuildingIconUWB::InitializeIconWidget(UBuilding* BuildingPointer, bool Cha
 
 void UBuildingIconUWB::InitializeIconWidget()
 {
-	Building = nullptr;
+	ClearIconWidget();
 	IconButton->OnClicked.AddUniqueDynamic(this, &UBuildingIconUWB::OpenUIBuildingTab);
+}
+
+void UBuildingIconUWB::ClearIconWidget()
+{
+	Building = nullptr;
 	if (EmptySlotIcon) Image->SetBrushFromTexture(EmptySlotIcon);
 }
 
@@ -62,12 +64,10 @@ void UBuildingIconUWB::OpenUIBuildingTab()
 {
 	if (!Building)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("if"));
 		OnButtonClicked.Broadcast(EUIGameStates::CreateBuilding, nullptr, this);
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("else"));
 		OnButtonClicked.Broadcast(EUIGameStates::Building, Building, this);
 	}
 }

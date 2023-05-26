@@ -43,9 +43,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DisolveSpaceSnapping();
 
-protected:
-
+	UFUNCTION()
 	void SnapToSpaceObject(ASpaceObject* SpaceObject);
+
+protected:
 
 	ASpaceObject* TraceSpaceObject();
 };

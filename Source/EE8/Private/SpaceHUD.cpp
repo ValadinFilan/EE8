@@ -18,6 +18,8 @@
 #include "SpaceEntities/Planet.h"
 #include "Player/StarPlayerState.h"
 
+
+
 void ASpaceHUD::BeginPlay()
 {
 	Super::BeginPlay();
@@ -60,6 +62,12 @@ void ASpaceHUD::Initialize()
 				{
 					PlanetWidget->ExitButton->OnClicked.AddUniqueDynamic(this, &ASpaceHUD::HideCurrentWidget);
 					PlanetWidget->ExitButton->OnClicked.AddUniqueDynamic(Cast<AStarPlayerController>(GetOwningPlayerController()), &AStarPlayerController::DisolveSpaceSnapping);//Verify same function isn't already bound 
+					PlanetWidget->FirstInitializePlanetWidget();
+					for (UBuildingIconUWB* BuildingIconWidget : PlanetWidget->BuildingIconWidgets)
+					{
+						BuildingIconWidget->OnButtonClicked.AddUObject(this, &ASpaceHUD::SetUIState);
+						//PlanetWidget->GetPlanet()->OnCreateBuilding.AddUObject(BuildingIconWidget, &UBuildingIconUWB::InitializeIconWidget);
+					}
 				}
 			}
 			//Bind and configure widget
@@ -120,10 +128,16 @@ void ASpaceHUD::SetUIState(EUIGameStates UIState)
 				{
 					PlanetWidget->BuildingTable->SetVisibility(ESlateVisibility::Visible);
 					PlanetWidget->InitializePlanetWidget(PlayerController->CurrentPlanet.Get());
-					for (UBuildingIconUWB* BuildingIconWidget : PlanetWidget->BuildingIconWidgets)
+					for (int32 i = 0; i < PlanetWidget->BuildingIconWidgets.Num(); i++)
 					{
-						BuildingIconWidget->OnButtonClicked.AddUObject(this, &ASpaceHUD::SetUIState);
-						//PlanetWidget->GetPlanet()->OnCreateBuilding.AddUObject(BuildingIconWidget, &UBuildingIconUWB::InitializeIconWidget);
+						PlanetWidget->BuildingIconWidgets[i]->ClearIconWidget();
+						if (i < PlayerController->CurrentPlanet.Get()->Buildings.Num())
+						{
+							TArray<UBuilding*> BuildingList = PlayerController->CurrentPlanet.Get()->Buildings;
+							//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%s"), *UEnum::GetValueAsString(BuildingList[i]->GetBuildingType())));
+							PlanetWidget->BuildingIconWidgets[i]->InitializeIconWidget(BuildingList[i], false);
+						}
+						PlanetWidget->BuildingIconWidgets[i]->SetVisibility(i < PlayerController->CurrentPlanet->Info.SlotsNum ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 					}
 				}
 				CurentUIGameState = EUIGameStates::Planet;

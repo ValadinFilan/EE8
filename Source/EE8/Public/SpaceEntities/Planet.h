@@ -90,6 +90,7 @@ public:
 
 	AStarPlayerState* GetOwningPlayer();
 
+	UPROPERTY()
 	TArray<UBuilding*> Buildings;
 
 	FBuildingCreate OnCreateBuilding;

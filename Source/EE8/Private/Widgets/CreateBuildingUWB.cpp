@@ -35,22 +35,26 @@ void UCreateBuildingUWB::InitializeCreateBuildingWidget(APlanet* TargetPlanet, U
 
 void UCreateBuildingUWB::CreateExtractBuilding()
 {
-	BuildingIconWidget->InitializeIconWidget(Planet->CreateBuilding(EBuildingType::Extract), true);
+	UBuilding* Building = Planet->CreateBuilding(EBuildingType::Extract);
+	if (Building) BuildingIconWidget->InitializeIconWidget(Building, true);
 }
 
 void UCreateBuildingUWB::CreateShipyardBuilding()
 {
-	BuildingIconWidget->InitializeIconWidget(Planet->CreateBuilding(EBuildingType::Shipyard), true);
+	UBuilding* Building = Planet->CreateBuilding(EBuildingType::Shipyard);
+	if (Building) BuildingIconWidget->InitializeIconWidget(Building, true);
 }
 
 void UCreateBuildingUWB::CreateDefenceBuilding()
 {
-	BuildingIconWidget->InitializeIconWidget(Planet->CreateBuilding(EBuildingType::Defence), true);
+	UBuilding* Building = Planet->CreateBuilding(EBuildingType::Defence);
+	if (Building) BuildingIconWidget->InitializeIconWidget(Building, true);
 }
 
 void UCreateBuildingUWB::CreateManagementBuilding()
 {
-	BuildingIconWidget->InitializeIconWidget(Planet->CreateBuilding(EBuildingType::Management), true);
+	UBuilding* Building = Planet->CreateBuilding(EBuildingType::Management);
+	if (Building) BuildingIconWidget->InitializeIconWidget(Building, true);
 }
 
 void UCreateBuildingUWB::UpdateMetal(float NewMetal)

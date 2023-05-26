@@ -88,7 +88,7 @@ UBuilding* APlanet::CreateBuilding(EBuildingType Type)
 	{
 	case EBuildingType::Extract:
 		{
-		if (OwningPlayerState->Metal < 300) return nullptr;//UExtractBuilding cost
+		if ((OwningPlayerState->Metal < 300)||(Buildings.Num() == 0)) return nullptr;//UExtractBuilding cost
 		OwningPlayerState->Metal -= 300;
 		UExtractBuilding* NewExtractBuilding;
 		NewExtractBuilding = NewObject<UExtractBuilding>();
@@ -99,7 +99,7 @@ UBuilding* APlanet::CreateBuilding(EBuildingType Type)
 		}
 	case EBuildingType::Shipyard:
 		{
-		if (OwningPlayerState->Metal < 300) return nullptr;//UShipyardBuilding cost
+		if ((OwningPlayerState->Metal < 300) || (Buildings.Num() == 0)) return nullptr;//UShipyardBuilding cost
 		OwningPlayerState->Metal -= 300;
 		UShipyardBuilding* NewShipyardBuilding;
 		NewShipyardBuilding = NewObject<UShipyardBuilding>();
@@ -109,7 +109,7 @@ UBuilding* APlanet::CreateBuilding(EBuildingType Type)
 		}
 	case EBuildingType::Defence:
 		{
-		if (OwningPlayerState->Metal < 300) return nullptr;//UDefenceBuilding cost
+		if ((OwningPlayerState->Metal < 300) || (Buildings.Num() == 0)) return nullptr;//UDefenceBuilding cost
 		OwningPlayerState->Metal -= 300;
 		UDefenceBuilding* NewDefenceBuilding;
 		NewDefenceBuilding = NewObject<UDefenceBuilding>();
@@ -139,13 +139,28 @@ UBuilding* APlanet::UpgradeBuilding(UBuilding* Building)
 {
 	if (Buildings.Contains(Building))
 	{
+		int32 Level = 0;
 		float Cost = Building->GetBuildingLevelData().UpgpadeCost;
-
+		for (int32 i = 0; i < Buildings.Num(); i++)
+		{
+			if (Buildings[i]->BuildingType == EBuildingType::Management)
+			{
+				Level = Buildings[i]->GetBuildingLevel();
+			}
+		}
 		if (Building->GetBuildingLevel() == 3 || OwningPlayerState->Metal < Cost) return nullptr;//UBuilding upgrade cost
-		
+		else if (((Building->GetBuildingLevel() >= Level) && (Building->GetBuildingType() != EBuildingType::Management)) || OwningPlayerState->Metal < Cost) return nullptr;
 		OwningPlayerState->Metal -= Cost;
 		Building->UpgrageLevel();
-
+		if (Building->GetBuildingType() != EBuildingType::Extract)
+		{
+			OwningPlayerState->AddMetalIncome(Building->GetBuildingLevelData().LevelBuff);
+			OwningPlayerState->AddEnergyIncome(1);
+			if (Building->GetBuildingLevel() == 3)
+			{
+				OwningPlayerState->AddCarbonIncome(10);
+			}
+		}
 	}
 	return Building;
 }

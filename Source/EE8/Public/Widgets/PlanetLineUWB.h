@@ -31,6 +31,9 @@ public:
 	TArray<USmallBuildingIconUWB*> SmallBuildingIcons;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+		UButton* IconButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UHorizontalBox* BuildingTable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -38,4 +41,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		UTextBlock* Data;
+
+	bool Initialize() override;
+
+	UFUNCTION()
+	void SnapToPlanet();
 };

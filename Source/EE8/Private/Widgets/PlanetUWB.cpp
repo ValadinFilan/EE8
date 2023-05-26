@@ -28,7 +28,18 @@ void UPlanetUWB::InitializePlanetWidget(APlanet* TargetPlanet)
 	PlanetResourcesMetalTextBox->SetText(FText::AsNumber(Planet->Info.MetalRemaining));
 	PlanetResourcesCarbonTextBox->SetText(FText::AsNumber(Planet->Info.CarbonRemaining));
 	PlanetSlotNum->SetText(FText::AsNumber(Planet->Info.SlotsNum));
+	/*
+	PlanetResourcesDescTextBox->SetText();
+	PlanetEffectsDescTextBox->SetText();*/
+}
 
+void UPlanetUWB::UnhideBuildingTable()
+{
+	BuildingTable->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UPlanetUWB::FirstInitializePlanetWidget()
+{
 	if (!BuildingIconClass) return;
 	BuildingTable->ClearChildren();
 
@@ -42,7 +53,7 @@ void UPlanetUWB::InitializePlanetWidget(APlanet* TargetPlanet)
 		}
 	}
 
-	for (int32 i = 0; i < Planet->Info.SlotsNum; i++)
+	for (int32 i = 0; i < 9; i++)
 	{
 		UBuildingIconUWB* BuildingIconWidget = WidgetTree->ConstructWidget<UBuildingIconUWB>(BuildingIconClass);
 
@@ -53,19 +64,11 @@ void UPlanetUWB::InitializePlanetWidget(APlanet* TargetPlanet)
 			//GEngine->AddOnScreenDebugMessage(FText::AsNumber(FMath::Fmod(i, 3)));
 			//BuildingIconWidget->InitializeLevelWidget(HUD, i);
 			//Planet->Buildings[i].
-			if (i < Planet->Buildings.Num()) {
+			/*if (i < Planet->Buildings.Num()) {
 				BuildingIconWidget->InitializeIconWidget(Planet->Buildings[i], false);
-			}
-			else BuildingIconWidget->InitializeIconWidget();
+			}*/
+			BuildingIconWidget->InitializeIconWidget();
 			BuildingIconWidgets.Add(BuildingIconWidget);
 		}
 	}
-	/*
-	PlanetResourcesDescTextBox->SetText();
-	PlanetEffectsDescTextBox->SetText();*/
-}
-
-void UPlanetUWB::UnhideBuildingTable()
-{
-	BuildingTable->SetVisibility(ESlateVisibility::Visible);
 }

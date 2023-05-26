@@ -65,4 +65,5 @@ public:
 
 	UFUNCTION()
 	void UnhideBuildingTable();
+	void FirstInitializePlanetWidget();
 };
